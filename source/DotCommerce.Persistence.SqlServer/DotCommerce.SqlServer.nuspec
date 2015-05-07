@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>DotCommerce.SqlServer</id>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
         <authors>Dejan Milicic</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>DotCommerce peristence layer Sql Server</description>
@@ -13,7 +13,7 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="TsqlScripts\Script.sql" target="content\TsqlScripts\Script.sql" />
+        <file src="DotCommerce\Script.sql" target="content\TsqlScripts\Script.sql" />
         <file src="bin\Release\DotCommerce.Persistence.SqlServer.dll" target="lib\DotCommerce.Persistence.SqlServer.dll" />
         <file src="readme.txt" target="readme.txt" />
     </files>
