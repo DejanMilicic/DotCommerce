@@ -5,7 +5,7 @@ namespace DotCommerce.API
 
 	using DotCommerce.Domain;
 
-	public class OrderService
+	public class OrderService : IOrderService
 	{
 		private readonly IPersistence persistence;
 
@@ -14,10 +14,10 @@ namespace DotCommerce.API
 			this.persistence = persistence;
 		}
 
-		public void Save(Order order)
-		{
-			this.persistence.Save(order);
-		}
+		//public void Save(Order order)
+		//{
+		//	this.persistence.Save(order);
+		//}
 
 		public Order GetOrCreateOrder(string userId)
 		{

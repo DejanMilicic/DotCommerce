@@ -9,14 +9,14 @@ namespace DotCommerce.Persistence.SqlServer.Test
 		/// <summary>
 		/// Create new order and save it into database
 		/// </summary>
-		public void CreateNewOrder()
-		{
-			Domain.Order order = new Order("user123");
-			IPersistence persistence = new SqlServer.Persistence();
-			OrderService os = new OrderService(persistence);
+		//public void CreateNewOrder()
+		//{
+		//	Domain.Order order = new Order("user123");
+		//	IPersistence persistence = new SqlServer.Persistence();
+		//	OrderService os = new OrderService(persistence);
 
-			os.Save(order);
-		}
+		//	os.Save(order);
+		//}
 
 		/// <summary>
 		/// Get order with status incomplete for current user
@@ -26,7 +26,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 		public void GetCreateNewOrder()
 		{
 			IPersistence persistence = new SqlServer.Persistence();
-			OrderService os = new OrderService(persistence);
+			IOrderService os = new OrderService(persistence);
 
 			Domain.Order order = os.GetOrCreateOrder("user123");
 		}
