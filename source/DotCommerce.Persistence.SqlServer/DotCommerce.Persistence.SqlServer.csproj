@@ -57,6 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DotCommerce\Script.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Script.sql</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderLine.cs" />
     <Compile Include="EntityFramework\Db.cs" />
@@ -83,7 +88,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <Content Include="readme.txt" />
-    <Content Include="TsqlScripts\Script.sql">
+    <Content Include="DotCommerce\Script.sql">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Script.cs</LastGenOutput>
     </Content>
@@ -109,7 +114,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TsqlScripts\readme.txt" />
+    <Content Include="DotCommerce\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
