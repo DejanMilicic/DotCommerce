@@ -15,5 +15,6 @@
     <files>
         <file src="TsqlScripts\Script.sql" target="content\TsqlScripts\Script.sql" />
         <file src="bin\Release\DotCommerce.Persistence.SqlServer.dll" target="lib\DotCommerce.Persistence.SqlServer.dll" />
+        <file src="readme.txt" target="readme.txt" />
     </files>
 </package>
