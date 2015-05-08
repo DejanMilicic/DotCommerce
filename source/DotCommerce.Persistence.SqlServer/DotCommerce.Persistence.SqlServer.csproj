@@ -57,11 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DotCommerce\Script.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Script.sql</DependentUpon>
-    </Compile>
+    <Compile Include="DotCommerce\Script.sql" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderLine.cs" />
     <Compile Include="EntityFramework\Db.cs" />
@@ -88,10 +84,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <Content Include="readme.txt" />
-    <Content Include="DotCommerce\Script.sql">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Script.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotCommerce.Domain\DotCommerce.Domain.csproj">
