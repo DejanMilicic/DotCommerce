@@ -44,5 +44,9 @@ namespace DotCommerce.Domain
 		public OrderStatus Status { get; private set; }
 
 		public DateTime CreatedOn { get; private set; }
+
+		// shipping
+		// vat
+		// total
 	}
 }

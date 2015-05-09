@@ -6,17 +6,11 @@ namespace DotCommerce.Domain
 	public class OrderStatus : Enumeration<OrderStatus, string>
 	{
 		public static readonly OrderStatus Incomplete = new OrderStatus("Incomplete", "Incomplete");
-
-
-
 		public static readonly OrderStatus Closed = new OrderStatus("Closed", "Closed");
-
-
 
 
 		/*
 		Cancelled,
-		,
 		PaymentFailed,
 		Confirmed,
 		OfflinePayment,
@@ -29,7 +23,7 @@ namespace DotCommerce.Domain
 		WaitingForPaymentProvider,
 		Returned,
 		Wishlist
-		 */
+		*/
 
 		public OrderStatus(string value, string displayName): base(value, displayName)
 		{
