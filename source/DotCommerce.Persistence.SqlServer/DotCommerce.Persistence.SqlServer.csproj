@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DotCommerce.SqlServer.nuspec" />
     <None Include="DotCommerce\Script.sql" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderLine.cs" />
