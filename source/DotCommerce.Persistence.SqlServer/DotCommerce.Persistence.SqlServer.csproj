@@ -76,6 +76,14 @@
     <Compile Include="Migrations\201504121218307_changes2.Designer.cs">
       <DependentUpon>201504121218307_changes2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505081948280_OrderLineProperties.cs" />
+    <Compile Include="Migrations\201505081948280_OrderLineProperties.Designer.cs">
+      <DependentUpon>201505081948280_OrderLineProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505090804174_OrderLineProperties2.cs" />
+    <Compile Include="Migrations\201505090804174_OrderLineProperties2.Designer.cs">
+      <DependentUpon>201505090804174_OrderLineProperties2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +108,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504121218307_changes2.resx">
       <DependentUpon>201504121218307_changes2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505081948280_OrderLineProperties.resx">
+      <DependentUpon>201505081948280_OrderLineProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505090804174_OrderLineProperties2.resx">
+      <DependentUpon>201505090804174_OrderLineProperties2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

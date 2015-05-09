@@ -1,8 +1,6 @@
 ﻿
 namespace DotCommerce.Persistence.SqlServer.Infrastructure
 {
-	using System.Collections.Generic;
-
 	using AutoMapper;
 
 	using DotCommerce.Domain;
@@ -16,10 +14,11 @@ namespace DotCommerce.Persistence.SqlServer.Infrastructure
 				.ForMember(x => x.Order, opt => opt.Ignore());
 
 			Mapper.CreateMap<Entities.Order, Domain.Order>()
-				.ForMember(e => e.Status, opt => opt.MapFrom(src => OrderStatus.FromValue(src.Status)))
-				//.ConstructProjectionUsing(src => new Order(src.Id, src.UserId, Mapper.Map<List<OrderLine>>(src.OrderLines), OrderStatus.FromValue(src.Status), src.CreatedOn))
-				;
-			Mapper.CreateMap<Entities.OrderLine, Domain.OrderLine>();
+				.ForMember(e => e.Status, opt => opt.MapFrom(src => OrderStatus.FromValue(src.Status)));
+
+			Mapper.CreateMap<Entities.OrderLine, Domain.OrderLine>()
+				.ForMember(x => x.Weight, opt => opt.Ignore())
+				.ForMember(x => x.Price, opt => opt.Ignore());
 
 			Mapper.AssertConfigurationIsValid();
 		}
