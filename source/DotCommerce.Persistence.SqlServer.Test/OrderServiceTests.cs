@@ -30,5 +30,14 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			Domain.Order order = os.GetOrCreateOrder("user123");
 		}
+
+		public void AddItemToCart()
+		{
+			IPersistence persistence = new SqlServer.Persistence();
+			IOrderService os = new OrderService(persistence);
+
+			Domain.Order order = os.GetOrCreateOrder("user123");
+			os.AddToOrder(order.Id, "555", 3, (decimal)10.00, "Test Product 1");
+		}
 	}
 }
