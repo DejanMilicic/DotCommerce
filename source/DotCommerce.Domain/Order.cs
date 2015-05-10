@@ -3,6 +3,7 @@ namespace DotCommerce.Domain
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 
 	public class Order
 	{
@@ -48,5 +49,13 @@ namespace DotCommerce.Domain
 		// shipping
 		// vat
 		// total
+
+		public int TotalItemCount
+		{
+			get
+			{
+				return this.OrderLines.Sum(x => x.Quantity);
+			}
+		}
 	}
 }
