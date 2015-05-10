@@ -54,7 +54,7 @@ namespace DotCommerce.Persistence.SqlServer
 		{
 			using (Db db = new Db())
 			{
-				List<Order> entitiesList = db.Orders.Where(x => x.UserId == userId).Take(take).ToList();
+				List<Order> entitiesList = db.Orders.Where(x => x.UserId == userId).Include(x => x.OrderLines).Take(take).ToList();
 				return Mapper.Map<List<Entities.Order>, List<Domain.Order>>(entitiesList);
 			}
 		}
