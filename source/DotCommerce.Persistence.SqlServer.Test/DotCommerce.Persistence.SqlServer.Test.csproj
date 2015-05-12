@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="OrderServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShippingCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -88,17 +89,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotCommerce.API\DotCommerce.API.csproj">
-      <Project>{292e864c-e888-4a8f-99a1-97ff651edd6b}</Project>
-      <Name>DotCommerce.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DotCommerce.Domain\DotCommerce.Domain.csproj">
-      <Project>{c14ceadc-1726-4c92-bef8-f56eb2e3a054}</Project>
-      <Name>DotCommerce.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DotCommerce.Persistence.SqlServer\DotCommerce.Persistence.SqlServer.csproj">
-      <Project>{0bcea4bb-c788-436a-8939-d2e10ae097db}</Project>
-      <Name>DotCommerce.Persistence.SqlServer</Name>
+    <ProjectReference Include="..\DotComerce\DotCommerce.csproj">
+      <Project>{b58193b4-fc25-4d2d-9b9d-f4b01f73cfbd}</Project>
+      <Name>DotCommerce</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

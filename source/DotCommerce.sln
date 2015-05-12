@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCommerce.API", "DotCommerce.API\DotCommerce.API.csproj", "{292E864C-E888-4A8F-99A1-97FF651EDD6B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCommerce.Domain", "DotCommerce.Domain\DotCommerce.Domain.csproj", "{C14CEADC-1726-4C92-BEF8-F56EB2E3A054}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCommerce.Persistence.SqlServer", "DotCommerce.Persistence.SqlServer\DotCommerce.Persistence.SqlServer.csproj", "{0BCEA4BB-C788-436A-8939-D2E10AE097DB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCommerce.Persistence.SqlServer.Test", "DotCommerce.Persistence.SqlServer.Test\DotCommerce.Persistence.SqlServer.Test.csproj", "{763BB17E-4488-419C-8C4A-E8AB0EC35735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCommerce", "DotComerce\DotCommerce.csproj", "{B58193B4-FC25-4D2D-9B9D-F4B01F73CFBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{292E864C-E888-4A8F-99A1-97FF651EDD6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{292E864C-E888-4A8F-99A1-97FF651EDD6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{292E864C-E888-4A8F-99A1-97FF651EDD6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{292E864C-E888-4A8F-99A1-97FF651EDD6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C14CEADC-1726-4C92-BEF8-F56EB2E3A054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C14CEADC-1726-4C92-BEF8-F56EB2E3A054}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C14CEADC-1726-4C92-BEF8-F56EB2E3A054}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C14CEADC-1726-4C92-BEF8-F56EB2E3A054}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BCEA4BB-C788-436A-8939-D2E10AE097DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BCEA4BB-C788-436A-8939-D2E10AE097DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BCEA4BB-C788-436A-8939-D2E10AE097DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BCEA4BB-C788-436A-8939-D2E10AE097DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{763BB17E-4488-419C-8C4A-E8AB0EC35735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{763BB17E-4488-419C-8C4A-E8AB0EC35735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{763BB17E-4488-419C-8C4A-E8AB0EC35735}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{763BB17E-4488-419C-8C4A-E8AB0EC35735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B58193B4-FC25-4D2D-9B9D-F4B01F73CFBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B58193B4-FC25-4D2D-9B9D-F4B01F73CFBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B58193B4-FC25-4D2D-9B9D-F4B01F73CFBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B58193B4-FC25-4D2D-9B9D-F4B01F73CFBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
