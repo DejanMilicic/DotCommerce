@@ -5,9 +5,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Linq;
-
 	using AutoMapper;
-
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 
@@ -16,7 +14,22 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 	{
 		public EfOrder()
 		{
+			
+		}
+
+		public EfOrder(string userId)
+		{
+			this.Id = 0;
+			this.UserId = userId;
 			this.OrderLines = new List<EfOrderLine>();
+			this.Status = OrderStatus.Incomplete.ToString();
+			this.CreatedOn = DateTime.UtcNow;
+			this.LastUpdated = DateTime.UtcNow;
+			this.ItemsCount = 0;
+			this.Weight = 0;
+			this.OrderLinesPrice = 0;
+			this.Shipping = 0;
+			this.Price = 0;
 		}
 
 		public int Id { get; set; }

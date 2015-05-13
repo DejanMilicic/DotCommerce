@@ -32,8 +32,7 @@ namespace DotCommerce
 
 				if (efOrder == null)
 				{
-					Order newOrder = new Order(userId);
-					efOrder = Mapper.Map<EfOrder>(newOrder);
+					efOrder = new EfOrder(userId);
 					db.Orders.Add(efOrder);
 					db.SaveChanges();
 				}
@@ -47,14 +46,7 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder efOrder = db.Orders.Include(x => x.OrderLines).FirstOrDefault(x => x.Id == orderId);
-				if (efOrder == null)
-				{
-					return null;
-				}
-				else
-				{
-					return Mapper.Map<Order>(efOrder);
-				}
+				return efOrder == null ? null : Mapper.Map<Order>(efOrder);
 			}
 		}
 

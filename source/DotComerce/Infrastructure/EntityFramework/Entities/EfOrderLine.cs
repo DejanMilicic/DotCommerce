@@ -23,8 +23,6 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 			this.ItemUrl = itemUrl;
 			this.ItemPrice = itemPrice;
 			this.Quantity = quantity;
-			this.Weight = 0;
-			this.Price = 0;
 
 			this.Recalculate();
 		}

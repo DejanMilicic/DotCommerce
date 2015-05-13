@@ -5,24 +5,6 @@ namespace DotCommerce.Domain
 
 	class OrderLine : IOrderLine
 	{
-		public OrderLine(string itemId, string itemName, decimal itemPrice, int quantity,
-			decimal itemDiscount = 0, int itemWeight = 0, string itemUrl = "", string itemImageUrl = "")
-		{
-			this.Id = 0;
-			this.ItemId = itemId;
-			this.ItemName = itemName;
-			this.ItemDiscount = itemDiscount;
-			this.ItemWeight = itemWeight;
-			this.ItemImageUrl = itemImageUrl;
-			this.ItemUrl = itemUrl;
-			this.ItemPrice = itemPrice;
-			this.Quantity = quantity;
-			this.Weight = 0;
-			this.Price = 0;
-
-			this.Recalculate();
-		}
-
 		public int Id { get; set; }
 		public string ItemId { get; set; }
 		public string ItemName { get; set; }
@@ -34,11 +16,5 @@ namespace DotCommerce.Domain
 		public int Quantity { get; set; }
 		public int Weight { get; set; }
 		public decimal Price { get; set; }
-
-		public void Recalculate()
-		{
-			this.Weight = this.ItemWeight * this.Quantity;
-			this.Price = (this.ItemPrice * this.Quantity) * ((100 - this.ItemDiscount) / 100);
-		}
 	}
 }
