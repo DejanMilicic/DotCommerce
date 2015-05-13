@@ -2,6 +2,7 @@
 namespace DotCommerce.Persistence.SqlServer.Test
 {
 	using System.Linq;
+	using System.Runtime.InteropServices.ComTypes;
 
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
@@ -93,6 +94,17 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.RemoveOrderLine(orderLineForRemoval);
 			order.OrderLines.Count().ShouldBe(1);
 			order.OrderLines.First().ItemId.ShouldBe(product2.Id);
+		}
+
+		public void ChangeQuantity(Product product1)
+		{
+			product1.Quantity = 10;
+
+			order = dc.AddProductToOrder(order, product1);
+			order.ItemsCount.ShouldBe(10);
+
+			order = dc.ChangeQuantity(order.OrderLines.First().Id, 3);
+			order.ItemsCount.ShouldBe(3);
 		}
 	}
 }

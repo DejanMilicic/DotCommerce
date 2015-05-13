@@ -16,5 +16,7 @@ namespace DotCommerce
 			string name = "", decimal discount = 0, int weight = 0, string url = "", string imageUrl = "");
 
 		IOrder RemoveOrderLine(int orderLineId);
+
+		IOrder ChangeQuantity(int orderLineId, int quantity);
 	}
 }
