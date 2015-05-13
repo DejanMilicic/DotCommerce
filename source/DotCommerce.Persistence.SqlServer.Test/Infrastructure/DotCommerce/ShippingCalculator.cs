@@ -1,7 +1,7 @@
 ﻿
-namespace DotCommerce.Persistence.SqlServer.Test
+namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce
 {
-	using DotCommerce.Interfaces;
+	using global::DotCommerce.Interfaces;
 
 	public class ShippingCalculator : IShippingCalculator
 	{
