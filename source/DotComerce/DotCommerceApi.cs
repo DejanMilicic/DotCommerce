@@ -76,5 +76,37 @@ namespace DotCommerce
 				return Mapper.Map<Order>(efOrder);
 			}
 		}
+
+		public IOrder RemoveOrderLine(int orderLineId)
+		{
+			using (Db db = new Db())
+			{
+				EfOrderLine orderline = db.OrderLines.SingleOrDefault(x => x.Id == orderLineId);
+				if (orderline == null)
+				{
+					return null;
+				}
+				else
+				{
+					EfOrder order = db.Orders.Include(o => o.OrderLines).SingleOrDefault(x => x.Id == orderline.OrderId);
+					if (order == null)
+					{
+						return null;
+					}
+					else
+					{
+						if (order.Status == OrderStatus.Incomplete.ToString())
+						{
+							db.Entry(orderline).State = EntityState.Deleted;
+							order.OrderLines.Remove(orderline);
+							order.Recalculate(this.shippingCalculator);
+							db.SaveChanges();
+						}
+
+						return Mapper.Map<Order>(order);
+					}
+				}
+			}
+		}
 	}
 }

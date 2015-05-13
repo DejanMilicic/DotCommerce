@@ -14,5 +14,7 @@ namespace DotCommerce
 
 		IOrder AddItemToOrder(int orderId, string itemid, int quantity, decimal price, 
 			string name = "", decimal discount = 0, int weight = 0, string url = "", string imageUrl = "");
+
+		IOrder RemoveOrderLine(int orderLineId);
 	}
 }

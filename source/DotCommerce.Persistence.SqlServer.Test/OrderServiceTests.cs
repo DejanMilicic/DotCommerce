@@ -24,7 +24,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetOrCreateOrder("user123");
 		}
 
-		public void AddItemToCart(Product product)
+		public void AddNewItemToOrder(Product product)
 		{
 			order = dc.AddProductToOrder(order, product);
 
@@ -67,6 +67,32 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			savedOl.Weight.ShouldBe(ol.Weight);
 			savedOl.Price.ShouldBe(product.Price * product.Quantity * ((100 - product.Discount) / (100)));
 			savedOl.Price.ShouldBe(ol.Price);
+		}
+
+		public void AddExistingItemToOrder(Product product)
+		{
+			int secondQuantity = 3;
+			int totalQuantity = product.Quantity + secondQuantity;
+
+			dc.AddProductToOrder(order, product);
+			product.Quantity = secondQuantity;
+			order = dc.AddProductToOrder(order, product);
+
+			order.OrderLines.Count().ShouldBe(1);
+			order.ItemsCount.ShouldBe(totalQuantity);
+		}
+
+		public void RemoveOrderLine(Product product1, Product product2)
+		{
+			order = dc.AddProductToOrder(order, product1);
+			int orderLineForRemoval = order.OrderLines.First().Id;
+
+			order = dc.AddProductToOrder(order, product2);
+			order.OrderLines.Count().ShouldBe(2);
+
+			order = dc.RemoveOrderLine(orderLineForRemoval);
+			order.OrderLines.Count().ShouldBe(1);
+			order.OrderLines.First().ItemId.ShouldBe(product2.Id);
 		}
 	}
 }
