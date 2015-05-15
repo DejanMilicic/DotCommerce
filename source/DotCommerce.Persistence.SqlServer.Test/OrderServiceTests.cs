@@ -2,14 +2,11 @@
 namespace DotCommerce.Persistence.SqlServer.Test
 {
 	using System.Linq;
-	using System.Runtime.InteropServices.ComTypes;
-
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
-	using DotCommerce.Persistence.SqlServer.Test.Infrastructure;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DTO;
-	using Respawn;
+	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support;
 	using Shouldly;
 
 	public class OrderServiceTests
@@ -19,7 +16,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 		public OrderServiceTests()
 		{
-			(new Checkpoint()).Reset(@"Server=.\SQLEXPRESS;Database=DotCommerce;Integrated Security=SSPI");
+			TestSupport.ResetDatabase();
 			
 			dc = new DotCommerceApi(new ShippingCalculator());
 			order = dc.GetOrCreateOrder("user123");

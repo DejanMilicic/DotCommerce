@@ -1,8 +1,10 @@
 ﻿
-namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure
+namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 {
 	using global::DotCommerce.Interfaces;
 	using global::DotCommerce.Persistence.SqlServer.Test.Infrastructure.DTO;
+
+	using Respawn;
 
 	public static class TestSupport
 	{
@@ -18,6 +20,19 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure
 				weight: product.Weight,
 				url: product.Url,
 				imageUrl: product.ImageUrl);
+		}
+
+		public static void ResetDatabase()
+		{
+			Checkpoint checkpoint = new Checkpoint
+									{
+										TablesToIgnore = new[]
+										{
+											"__MigrationHistory"
+										},
+									};
+
+			checkpoint.Reset(@"Server=.\SQLEXPRESS;Database=DotCommerce;Integrated Security=SSPI");
 		}
 	}
 }
