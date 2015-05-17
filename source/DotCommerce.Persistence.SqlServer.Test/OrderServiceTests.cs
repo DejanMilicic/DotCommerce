@@ -123,6 +123,12 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order.Status.ShouldBe(OrderStatus.Closed);
 		}
 
+		public void SetUser(string userId)
+		{
+			order = dc.SetUser(order.Id, userId);
+			order.UserId.ShouldBe(userId);
+		}
+
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
 		{
 			return orderAddress.Title == address.Title

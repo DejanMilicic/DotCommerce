@@ -222,5 +222,16 @@ namespace DotCommerce
 				return Mapper.Map<Order>(order);
 			}
 		}
+
+		public IOrder SetUser(int orderId, string userId)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder order = GetOrderById(db, orderId);
+				order.UserId = userId;
+				db.SaveChanges();
+				return Mapper.Map<Order>(order);
+			}
+		}
 	}
 }

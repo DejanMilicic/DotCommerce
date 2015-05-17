@@ -55,5 +55,7 @@ namespace DotCommerce
 			);
 
 		IOrder SetStatus(int orderId, OrderStatus status);
+
+		IOrder SetUser(int orderId, string userId);
 	}
 }
