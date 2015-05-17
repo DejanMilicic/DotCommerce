@@ -87,6 +87,7 @@
     <Compile Include="Infrastructure\Autofixture\Customizations.cs" />
     <Compile Include="Infrastructure\Autofixture\DiscountBuilder.cs" />
     <Compile Include="Infrastructure\Autofixture\ProductCustomization.cs" />
+    <Compile Include="Infrastructure\DTO\Address.cs" />
     <Compile Include="OrderServiceTests.cs" />
     <Compile Include="Infrastructure\DTO\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

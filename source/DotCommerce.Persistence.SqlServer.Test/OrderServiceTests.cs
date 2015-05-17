@@ -103,5 +103,35 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.ChangeQuantity(order.OrderLines.First().Id, 3);
 			order.ItemsCount.ShouldBe(3);
 		}
+
+		public void SetShippingAddress(Address shippingAddress)
+		{
+			order = dc.SetShippingAddress(order, shippingAddress);
+			AreEqual(order.ShippingAddress, shippingAddress).ShouldBe(true);
+		}
+
+		public void SetBillingAddress(Address billingAddress)
+		{
+			order = dc.SetBillingAddress(order, billingAddress);
+			AreEqual(order.BillingAddress, billingAddress).ShouldBe(true);
+		}
+
+		private bool AreEqual(IOrderAddress orderAddress, Address address)
+		{
+			return orderAddress.Title == address.Title
+				&& orderAddress.FirstName == address.FirstName
+				&& orderAddress.LastName == address.LastName
+				&& orderAddress.Company == address.Company
+				&& orderAddress.Street == address.Street
+				&& orderAddress.StreetNumber == address.StreetNumber
+				&& orderAddress.City == address.City
+				&& orderAddress.Zip == address.Zip
+				&& orderAddress.Country == address.Country
+				&& orderAddress.State == address.State
+				&& orderAddress.Province == address.Province
+				&& orderAddress.Email == address.Email
+				&& orderAddress.Phone == address.Phone
+				&& orderAddress.SingleAddress == address.SingleAddress;
+		}
 	}
 }

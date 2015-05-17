@@ -22,6 +22,26 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 				imageUrl: product.ImageUrl);
 		}
 
+		public static IOrder SetShippingAddress(this IDotCommerceApi dc, IOrder order, Address address)
+		{
+			return dc.SetShippingAddress(
+				orderId: order.Id, 
+				title: address.Title, firstName: address.FirstName, lastName: address.LastName, company: address.Company,
+				street: address.Street, streetNumber: address.StreetNumber, city: address.City, zip: address.Zip,
+				country: address.Country, state: address.State, province: address.Province, email: address.Email,
+				phone: address.Phone, singleAddress: address.SingleAddress);
+		}
+
+		public static IOrder SetBillingAddress(this IDotCommerceApi dc, IOrder order, Address address)
+		{
+			return dc.SetBillingAddress(
+				orderId: order.Id, 
+				title: address.Title, firstName: address.FirstName, lastName: address.LastName, company: address.Company,
+				street: address.Street, streetNumber: address.StreetNumber, city: address.City, zip: address.Zip,
+				country: address.Country, state: address.State, province: address.Province, email: address.Email,
+				phone: address.Phone, singleAddress: address.SingleAddress);
+		}
+
 		public static void ResetDatabase()
 		{
 			Checkpoint checkpoint = new Checkpoint
