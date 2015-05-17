@@ -20,6 +20,7 @@ namespace DotCommerce.Infrastructure.EntityFramework
 
 		public DbSet<EfOrder> Orders { get; set; }
 		public DbSet<EfOrderLine> OrderLines { get; set; }
+		public DbSet<EfAddress> Addresses { get; set; }
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{

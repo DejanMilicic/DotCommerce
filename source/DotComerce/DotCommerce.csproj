@@ -57,10 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\OrderAddress.cs" />
+    <Compile Include="Interfaces\IOrderAddress.cs" />
     <Compile Include="Domain\OrderStatus.cs" />
     <Compile Include="IDotCommerceApi.cs" />
     <Compile Include="Infrastructure\EntityFramework\Db.cs" />
     <Compile Include="Infrastructure\EntityFramework\DbContextProvider.cs" />
+    <Compile Include="Infrastructure\EntityFramework\Entities\EfAddress.cs" />
     <Compile Include="Infrastructure\EntityFramework\Entities\EfOrder.cs" />
     <Compile Include="Infrastructure\EntityFramework\Entities\EfOrderLine.cs" />
     <Compile Include="Infrastructure\EntityFramework\IDbContextProvider.cs" />
@@ -84,6 +87,14 @@
     <Compile Include="Migrations\201505122146402_ForeignKey.Designer.cs">
       <DependentUpon>201505122146402_ForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505151628445_Addresses.cs" />
+    <Compile Include="Migrations\201505151628445_Addresses.Designer.cs">
+      <DependentUpon>201505151628445_Addresses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505151722532_AddressesCorrections.cs" />
+    <Compile Include="Migrations\201505151722532_AddressesCorrections.Designer.cs">
+      <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -106,6 +117,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505122146402_ForeignKey.resx">
       <DependentUpon>201505122146402_ForeignKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505151628445_Addresses.resx">
+      <DependentUpon>201505151628445_Addresses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505151722532_AddressesCorrections.resx">
+      <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

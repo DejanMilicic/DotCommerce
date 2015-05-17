@@ -25,5 +25,11 @@ namespace DotCommerce.Domain
 		public decimal OrderLinesPrice { get; set; } 
 		public decimal Shipping { get; set; }
 		public decimal Price { get; set; }
+
+		public IOrderAddress ShippingAddress { get { return EditableShippingAddress; } }
+		public OrderAddress EditableShippingAddress { get; set; }
+
+		public IOrderAddress BillingAddress { get { return EditableBillingAddress; } }
+		public OrderAddress EditableBillingAddress { get; set; }
 	}
 }

@@ -21,6 +21,37 @@ namespace DotCommerce
 			this.shippingCalculator = shippingCalculator;
 		}
 
+		private EfOrder GetOrderByUser(Db db, string userId)
+		{
+			return db.Orders
+				.Include(x => x.OrderLines)
+				.Include(x => x.BillingAddress)
+				.Include(x => x.ShippingAddress)
+				.FirstOrDefault(x => x.UserId == userId);
+		}
+
+		private EfOrder GetOrderById(Db db, int orderId)
+		{
+			EfOrder efOrder = db.Orders
+				.Include(x => x.OrderLines)
+				.Include(x => x.BillingAddress)
+				.Include(x => x.ShippingAddress)
+				.FirstOrDefault(x => x.Id == orderId);
+
+			if (efOrder == null) throw new Exception("Order with orderId does not exist");
+
+			return efOrder;
+		}
+
+		private EfOrderLine GetOrderlineById(Db db, int orderlineId)
+		{
+			EfOrderLine efOrderLine = db.OrderLines.SingleOrDefault(x => x.Id == orderlineId);
+
+			if (efOrderLine == null) throw new Exception("Order line with orderlineId does not exist");
+
+			return efOrderLine;
+		}
+
 		/// <summary>
 		/// For user return order with status incomplete, or create new one otherwise
 		/// </summary>
@@ -28,7 +59,7 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder efOrder = db.Orders.Where(x => x.UserId == userId).Include(x => x.OrderLines).FirstOrDefault();
+				EfOrder efOrder = GetOrderByUser(db, userId);
 
 				if (efOrder == null)
 				{
@@ -45,7 +76,7 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder efOrder = db.Orders.Include(x => x.OrderLines).FirstOrDefault(x => x.Id == orderId);
+				EfOrder efOrder = GetOrderById(db, orderId);
 				return efOrder == null ? null : Mapper.Map<Order>(efOrder);
 			}
 		}
@@ -55,10 +86,7 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder efOrder = db.Orders.Include(x => x.OrderLines).SingleOrDefault(x => x.Id == orderId);
-
-				if (efOrder == null) throw new Exception("Order with orderId does not exist");
-
+				EfOrder efOrder = GetOrderById(db, orderId);
 				EfOrderLine efOrderLine = efOrder.FindOrderLine(itemid, price, discount, weight);
 
 				if (efOrderLine != null)
@@ -81,30 +109,23 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrderLine orderline = db.OrderLines.SingleOrDefault(x => x.Id == orderLineId);
+				EfOrderLine orderline = GetOrderlineById(db, orderLineId);
 				if (orderline == null)
 				{
 					return null;
 				}
 				else
 				{
-					EfOrder order = db.Orders.Include(o => o.OrderLines).SingleOrDefault(x => x.Id == orderline.OrderId);
-					if (order == null)
+					EfOrder order = GetOrderById(db, orderline.OrderId);
+					if (order.Status == OrderStatus.Incomplete.ToString())
 					{
-						return null;
+						db.Entry(orderline).State = EntityState.Deleted;
+						order.OrderLines.Remove(orderline);
+						order.Recalculate(this.shippingCalculator);
+						db.SaveChanges();
 					}
-					else
-					{
-						if (order.Status == OrderStatus.Incomplete.ToString())
-						{
-							db.Entry(orderline).State = EntityState.Deleted;
-							order.OrderLines.Remove(orderline);
-							order.Recalculate(this.shippingCalculator);
-							db.SaveChanges();
-						}
 
-						return Mapper.Map<Order>(order);
-					}
+					return Mapper.Map<Order>(order);
 				}
 			}
 		}
@@ -121,31 +142,73 @@ namespace DotCommerce
 			{
 				using (Db db = new Db())
 				{
-					EfOrderLine orderline = db.OrderLines.SingleOrDefault(x => x.Id == orderLineId);
-					if (orderline == null)
+					EfOrderLine orderline = GetOrderlineById(db, orderLineId);
+					EfOrder order = this.GetOrderById(db, orderline.OrderId);
+					if (order.Status == OrderStatus.Incomplete.ToString())
 					{
-						return null;
+						orderline.Quantity = quantity;
+						order.Recalculate(this.shippingCalculator);
+						db.SaveChanges();
 					}
-					else
-					{
-						EfOrder order = db.Orders.Include(o => o.OrderLines).SingleOrDefault(x => x.Id == orderline.OrderId);
-						if (order == null)
-						{
-							return null;
-						}
-						else
-						{
-							if (order.Status == OrderStatus.Incomplete.ToString())
-							{
-								orderline.Quantity = quantity;
-								order.Recalculate(this.shippingCalculator);
-								db.SaveChanges();
-							}
 
-							return Mapper.Map<Order>(order);
-						}
-					}
+					return Mapper.Map<Order>(order);
 				}
+			}
+		}
+
+		public IOrder SetShippingAddress(int orderId, 
+			string title = "",
+			string firstName = "",
+			string lastName = "",
+			string company = "",
+			string street = "",
+			string streetNumber = "",
+			string city = "",
+			string zip = "",
+			string country = "",
+			string state = "",
+			string province = "",
+			string email = "",
+			string phone = "", 
+			bool singleAddress =  false
+			)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder order = GetOrderById(db, orderId);
+				EfAddress shippingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
+				order.ShippingAddress = shippingAddress;
+				order.Recalculate(this.shippingCalculator);
+				db.SaveChanges();
+				return Mapper.Map<Order>(order);
+			}
+		}
+
+		public IOrder SetBillingAddress(int orderId, 
+			string title = "",
+			string firstName = "",
+			string lastName = "",
+			string company = "",
+			string street = "",
+			string streetNumber = "",
+			string city = "",
+			string zip = "",
+			string country = "",
+			string state = "",
+			string province = "",
+			string email = "",
+			string phone = "", 
+			bool singleAddress =  false
+			)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder order = GetOrderById(db, orderId);
+				EfAddress billingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
+				order.BillingAddress = billingAddress;
+				order.Recalculate(this.shippingCalculator);
+				db.SaveChanges();
+				return Mapper.Map<Order>(order);
 			}
 		}
 	}

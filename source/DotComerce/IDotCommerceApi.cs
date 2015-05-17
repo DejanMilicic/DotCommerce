@@ -18,5 +18,39 @@ namespace DotCommerce
 		IOrder RemoveOrderLine(int orderLineId);
 
 		IOrder ChangeQuantity(int orderLineId, int quantity);
+
+		IOrder SetShippingAddress(int orderId, 
+			string title = "",
+			string firstName = "",
+			string lastName = "",
+			string company = "",
+			string street = "",
+			string streetNumber = "",
+			string city = "",
+			string zip = "",
+			string country = "",
+			string state = "",
+			string province = "",
+			string email = "",
+			string phone = "", 
+			bool singleAddress =  false
+			);
+
+		IOrder SetBillingAddress(int orderId, 
+			string title = "",
+			string firstName = "",
+			string lastName = "",
+			string company = "",
+			string street = "",
+			string streetNumber = "",
+			string city = "",
+			string zip = "",
+			string country = "",
+			string state = "",
+			string province = "",
+			string email = "",
+			string phone = "", 
+			bool singleAddress =  false
+			);
 	}
 }

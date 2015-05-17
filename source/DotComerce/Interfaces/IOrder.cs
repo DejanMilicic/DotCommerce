@@ -38,5 +38,9 @@
 		decimal Shipping { get; }
 
 		decimal Price { get; }
+
+		IOrderAddress ShippingAddress { get; }
+		
+		IOrderAddress BillingAddress { get; }
 	}
 }
