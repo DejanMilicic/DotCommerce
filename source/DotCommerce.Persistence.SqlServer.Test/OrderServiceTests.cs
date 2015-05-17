@@ -116,6 +116,13 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			AreEqual(order.BillingAddress, billingAddress).ShouldBe(true);
 		}
 
+		public void SetStatus()
+		{
+			order.Status.ShouldBe(OrderStatus.Incomplete);
+			order = dc.SetStatus(order.Id, OrderStatus.Closed);
+			order.Status.ShouldBe(OrderStatus.Closed);
+		}
+
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
 		{
 			return orderAddress.Title == address.Title

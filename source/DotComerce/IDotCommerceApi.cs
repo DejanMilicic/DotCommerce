@@ -1,6 +1,7 @@
 
 namespace DotCommerce
 {
+	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 
 	public interface IDotCommerceApi
@@ -52,5 +53,7 @@ namespace DotCommerce
 			string phone = "", 
 			bool singleAddress =  false
 			);
+
+		IOrder SetStatus(int orderId, OrderStatus status);
 	}
 }

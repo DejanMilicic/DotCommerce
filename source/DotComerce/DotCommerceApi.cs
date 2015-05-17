@@ -211,5 +211,16 @@ namespace DotCommerce
 				return Mapper.Map<Order>(order);
 			}
 		}
+
+		public IOrder SetStatus(int orderId, OrderStatus status)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder order = GetOrderById(db, orderId);
+				order.Status = status.ToString();
+				db.SaveChanges();
+				return Mapper.Map<Order>(order);
+			}
+		}
 	}
 }
