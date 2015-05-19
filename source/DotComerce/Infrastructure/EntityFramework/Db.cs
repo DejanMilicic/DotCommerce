@@ -21,6 +21,7 @@ namespace DotCommerce.Infrastructure.EntityFramework
 		public DbSet<EfOrder> Orders { get; set; }
 		public DbSet<EfOrderLine> OrderLines { get; set; }
 		public DbSet<EfAddress> Addresses { get; set; }
+		public DbSet<EfOrderLog> OrderLogs { get; set; }
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
@@ -28,6 +29,12 @@ namespace DotCommerce.Infrastructure.EntityFramework
 				.HasMany(order => order.OrderLines)
 				.WithRequired(orderline => orderline.Order)
 				.HasForeignKey(orderline => orderline.OrderId);
+
+			modelBuilder.Entity<EfOrder>()
+				.HasMany(order => order.OrderLogs)
+				.WithRequired(log => log.Order)
+				.HasForeignKey(log => log.OrderId)
+				;
 
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 			base.OnModelCreating(modelBuilder);

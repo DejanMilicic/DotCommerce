@@ -42,5 +42,7 @@
 		IOrderAddress ShippingAddress { get; }
 		
 		IOrderAddress BillingAddress { get; }
+
+		IEnumerable<IOrderLog> OrderLogs { get; } 
 	}
 }

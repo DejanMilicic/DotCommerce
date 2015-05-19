@@ -66,6 +66,16 @@ namespace DotCommerce
 					efOrder = new EfOrder(userId);
 					db.Orders.Add(efOrder);
 					db.SaveChanges();
+
+					// todo move to separate method that will be used for logging
+					EfOrderLog logEntry = new EfOrderLog();
+					logEntry.OrderId = efOrder.Id;
+					logEntry.DateTime = DateTime.Now;
+					logEntry.Action = LogAction.CreateOrder.ToString();
+					logEntry.Value = "";
+					logEntry.OldValue = "";
+					db.OrderLogs.Add(logEntry);
+					db.SaveChanges();
 				}
 
 				return Mapper.Map<Order>(efOrder);

@@ -30,6 +30,17 @@ namespace DotCommerce.Domain
 		public OrderAddress EditableShippingAddress { get; set; }
 
 		public IOrderAddress BillingAddress { get { return EditableBillingAddress; } }
+
+
+		public IEnumerable<IOrderLog> OrderLogs
+		{
+			get
+			{
+				return this.EditableOrderLogs;
+			}
+		}
+		public List<OrderLog> EditableOrderLogs { get; set; } 
+
 		public OrderAddress EditableBillingAddress { get; set; }
 	}
 }

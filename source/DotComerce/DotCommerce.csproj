@@ -57,7 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\LogAction.cs" />
     <Compile Include="Domain\OrderAddress.cs" />
+    <Compile Include="Domain\OrderLog.cs" />
+    <Compile Include="Infrastructure\EntityFramework\Entities\EfOrderLog.cs" />
     <Compile Include="Interfaces\IOrderAddress.cs" />
     <Compile Include="Domain\OrderStatus.cs" />
     <Compile Include="IDotCommerceApi.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="Headspring\Enumeration.cs" />
     <Compile Include="Infrastructure\AutomapperBootstrapper.cs" />
     <Compile Include="Interfaces\IOrder.cs" />
+    <Compile Include="Interfaces\IOrderLog.cs" />
     <Compile Include="Interfaces\IShippingCalculator.cs" />
     <Compile Include="Migrations\201505121543188_Initial.cs" />
     <Compile Include="Migrations\201505121543188_Initial.Designer.cs">
@@ -94,6 +98,18 @@
     <Compile Include="Migrations\201505151722532_AddressesCorrections.cs" />
     <Compile Include="Migrations\201505151722532_AddressesCorrections.Designer.cs">
       <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505192107369_OrderLog.cs" />
+    <Compile Include="Migrations\201505192107369_OrderLog.Designer.cs">
+      <DependentUpon>201505192107369_OrderLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505192129587_TableRenaming.cs" />
+    <Compile Include="Migrations\201505192129587_TableRenaming.Designer.cs">
+      <DependentUpon>201505192129587_TableRenaming.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505192143520_OrderLogCorrections.cs" />
+    <Compile Include="Migrations\201505192143520_OrderLogCorrections.Designer.cs">
+      <DependentUpon>201505192143520_OrderLogCorrections.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +139,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505151722532_AddressesCorrections.resx">
       <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505192107369_OrderLog.resx">
+      <DependentUpon>201505192107369_OrderLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505192129587_TableRenaming.resx">
+      <DependentUpon>201505192129587_TableRenaming.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505192143520_OrderLogCorrections.resx">
+      <DependentUpon>201505192143520_OrderLogCorrections.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
