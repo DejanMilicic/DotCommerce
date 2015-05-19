@@ -3,7 +3,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 {
 	using System.ComponentModel.DataAnnotations.Schema;
 
-	[Table("Address")]
+	[Table("DotCommerceOrderAddress")]
 	class EfAddress
 	{
 		public EfAddress()

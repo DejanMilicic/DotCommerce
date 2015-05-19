@@ -9,7 +9,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 
-	[Table("Order")]
+	[Table("DotCommerceOrder")]
 	class EfOrder
 	{
 		public EfOrder()
@@ -45,6 +45,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public decimal Price { get; set; }
 		public EfAddress ShippingAddress { get; set; }
 		public EfAddress BillingAddress { get; set; }
+		public List<EfOrderLog> OrderLogs { get; set; }
 
 		public EfOrderLine FindOrderLine(string itemId, decimal itemPrice, decimal itemDiscount, int itemWeight)
 		{
