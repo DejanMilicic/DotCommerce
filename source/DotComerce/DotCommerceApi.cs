@@ -52,6 +52,18 @@ namespace DotCommerce
 			return efOrderLine;
 		}
 
+		private void LogEvent(Db db, int orderId, LogAction action, string oldValue, string value)
+		{
+			EfOrderLog logEntry = new EfOrderLog();
+			logEntry.OrderId = orderId;
+			logEntry.DateTime = DateTime.Now;
+			logEntry.Action = action.ToString();
+			logEntry.Value = value;
+			logEntry.OldValue = oldValue;
+			db.OrderLogs.Add(logEntry);
+			db.SaveChanges();			
+		}
+
 		/// <summary>
 		/// For user return order with status incomplete, or create new one otherwise
 		/// </summary>
@@ -67,15 +79,7 @@ namespace DotCommerce
 					db.Orders.Add(efOrder);
 					db.SaveChanges();
 
-					// todo move to separate method that will be used for logging
-					EfOrderLog logEntry = new EfOrderLog();
-					logEntry.OrderId = efOrder.Id;
-					logEntry.DateTime = DateTime.Now;
-					logEntry.Action = LogAction.CreateOrder.ToString();
-					logEntry.Value = "";
-					logEntry.OldValue = "";
-					db.OrderLogs.Add(logEntry);
-					db.SaveChanges();
+					LogEvent(db, efOrder.Id, LogAction.CreateOrder, "", "");
 				}
 
 				return Mapper.Map<Order>(efOrder);
@@ -110,6 +114,9 @@ namespace DotCommerce
 
 				efOrder.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
+
+				LogEvent(db, orderId, LogAction.AddItemToOrder, "",
+					"itemid:" + itemid + ", quantity: " + quantity + ", price: " + price + ", name: " + name + ", discount: " + discount + ", weight: " + weight + ", url: " + url + ", imageUrl: " + imageUrl);
 
 				return Mapper.Map<Order>(efOrder);
 			}
