@@ -198,14 +198,14 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
-				EfAddress oldShippingAddress = order.ShippingAddress;
+				string oldShippingAddress = order.ShippingAddress == null ? "" : order.ShippingAddress.ToString();
 				EfAddress shippingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
 
 				order.ShippingAddress = shippingAddress;
 				order.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetShippingAddress, oldShippingAddress.ToString(), shippingAddress.ToString());
+				LogEvent(db, order.Id, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
 
 				return Mapper.Map<Order>(order);
 			}
@@ -231,14 +231,14 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
-				EfAddress oldBillingAddress = order.BillingAddress;
+				string oldBillingAddress = order.BillingAddress == null ? "" : order.BillingAddress.ToString();
 				EfAddress billingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
 				
 				order.BillingAddress = billingAddress;
 				order.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetBillingAddress, oldBillingAddress.ToString(), billingAddress.ToString());
+				LogEvent(db, order.Id, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
 
 
 				return Mapper.Map<Order>(order);
