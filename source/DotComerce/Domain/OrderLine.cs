@@ -13,6 +13,15 @@ namespace DotCommerce.Domain
 		public string ItemImageUrl { get; set; }
 		public string ItemUrl { get; set; }
 		public decimal ItemPrice { get; set; }
+
+		public decimal ItemPriceWithDiscount
+		{
+			get
+			{
+				return this.ItemPrice * ((100 - this.ItemDiscount) / 100);
+			}
+		}
+
 		public int Quantity { get; set; }
 		public int Weight { get; set; }
 		public decimal Price { get; set; }

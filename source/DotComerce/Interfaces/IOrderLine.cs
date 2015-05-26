@@ -43,6 +43,11 @@ namespace DotCommerce.Interfaces
 		/// </summary>
 		decimal ItemPrice { get; }
 
+		/// <summary>
+		/// Item price with discount applied
+		/// </summary>
+		decimal ItemPriceWithDiscount { get; }
+
 		int Weight { get; }
 
 		/// <summary>
