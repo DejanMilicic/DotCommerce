@@ -44,5 +44,13 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public string Email { get; set; }
 		public string Phone { get; set; }
 		public bool SingleAddress { get; set; }
+
+		public override string ToString()
+		{
+			return "Id: " + Id + ", Title: " + Title + ", FirstName: " + FirstName + ", LastName: " + LastName + ", Company: "
+			       + Company + ", Street: " + Street + ", StreetNumber: " + StreetNumber + ", City: " + City + ", Zip: " + Zip
+			       + ", Country: " + Country + ", State: " + State + ", Province: " + Province + ", Email: " + Email
+			       + ", Phone: " + Phone + ", SingleAddress: " + SingleAddress;
+		}
 	}
 }

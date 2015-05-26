@@ -140,6 +140,8 @@ namespace DotCommerce
 						order.OrderLines.Remove(orderline);
 						order.Recalculate(this.shippingCalculator);
 						db.SaveChanges();
+
+						LogEvent(db, order.Id, LogAction.RemoveOrderLine, "", orderLineId.ToString());
 					}
 
 					return Mapper.Map<Order>(order);
@@ -163,9 +165,12 @@ namespace DotCommerce
 					EfOrder order = this.GetOrderById(db, orderline.OrderId);
 					if (order.Status == OrderStatus.Incomplete.ToString())
 					{
+						int oldQuantity = orderline.Quantity;
 						orderline.Quantity = quantity;
 						order.Recalculate(this.shippingCalculator);
 						db.SaveChanges();
+
+						LogEvent(db, order.Id, LogAction.ChangeQuantity, oldQuantity.ToString(), quantity.ToString());
 					}
 
 					return Mapper.Map<Order>(order);
@@ -193,10 +198,15 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
+				EfAddress oldShippingAddress = order.ShippingAddress;
 				EfAddress shippingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
+
 				order.ShippingAddress = shippingAddress;
 				order.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
+
+				LogEvent(db, order.Id, LogAction.SetShippingAddress, oldShippingAddress.ToString(), shippingAddress.ToString());
+
 				return Mapper.Map<Order>(order);
 			}
 		}
@@ -221,10 +231,16 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
+				EfAddress oldBillingAddress = order.BillingAddress;
 				EfAddress billingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
+				
 				order.BillingAddress = billingAddress;
 				order.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
+
+				LogEvent(db, order.Id, LogAction.SetBillingAddress, oldBillingAddress.ToString(), billingAddress.ToString());
+
+
 				return Mapper.Map<Order>(order);
 			}
 		}
@@ -234,8 +250,13 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
+				string existingStatus = order.Status;
+
 				order.Status = status.ToString();
 				db.SaveChanges();
+
+				LogEvent(db, order.Id, LogAction.SetOrderStatus, existingStatus, status.ToString());
+
 				return Mapper.Map<Order>(order);
 			}
 		}
@@ -245,8 +266,12 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrder order = GetOrderById(db, orderId);
+				string existingUser = order.UserId;
 				order.UserId = userId;
 				db.SaveChanges();
+
+				LogEvent(db, order.Id, LogAction.SetUser, existingUser, userId);
+
 				return Mapper.Map<Order>(order);
 			}
 		}
