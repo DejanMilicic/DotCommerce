@@ -3,7 +3,7 @@ namespace DotCommerce.Domain
 {
 	using DotCommerce.Interfaces;
 
-	public class OrderAddress : IOrderAddress
+	class OrderAddress : IOrderAddress
 	{
 		public OrderAddress(string title, string firstName, string lastName, string company, string street, string streetNumber, string city, string zip, string country, string state, string province, string email, string phone, bool singleAddress)
 		{
