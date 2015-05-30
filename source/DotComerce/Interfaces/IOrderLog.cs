@@ -2,7 +2,6 @@
 namespace DotCommerce.Interfaces
 {
 	using System;
-
 	using DotCommerce.Domain;
 
 	public interface IOrderLog

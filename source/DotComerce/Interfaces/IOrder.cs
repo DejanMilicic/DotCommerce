@@ -1,4 +1,5 @@
-﻿namespace DotCommerce.Interfaces
+﻿
+namespace DotCommerce.Interfaces
 {
 	using System;
 	using System.Collections.Generic;

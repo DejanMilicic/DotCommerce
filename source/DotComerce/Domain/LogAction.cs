@@ -14,8 +14,7 @@ namespace DotCommerce.Domain
 		public static readonly LogAction SetOrderStatus = new LogAction("SetOrderStatus", "SetOrderStatus");
 		public static readonly LogAction SetUser = new LogAction("SetUser", "SetUser");
 
-		public LogAction(string value, string displayName)
-			: base(value, displayName)
+		public LogAction(string value, string displayName) : base(value, displayName)
 		{
 		}
 	}

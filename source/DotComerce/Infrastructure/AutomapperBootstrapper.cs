@@ -4,7 +4,6 @@ namespace DotCommerce.Infrastructure
 	using AutoMapper;
 	using DotCommerce.Domain;
 	using DotCommerce.Infrastructure.EntityFramework.Entities;
-	using DotCommerce.Interfaces;
 
 	static class AutomapperBootstrapper
 	{

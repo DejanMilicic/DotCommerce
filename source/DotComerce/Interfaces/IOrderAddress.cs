@@ -1,3 +1,4 @@
+
 namespace DotCommerce.Interfaces
 {
 	public interface IOrderAddress
