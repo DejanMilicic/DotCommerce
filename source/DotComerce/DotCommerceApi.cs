@@ -23,11 +23,13 @@ namespace DotCommerce
 
 		private EfOrder GetIncompleteOrderForUser(Db db, string userId)
 		{
+			string incompleteStatus = OrderStatus.Incomplete.ToString();
+
 			return db.Orders
 				.Include(x => x.OrderLines)
 				.Include(x => x.BillingAddress)
 				.Include(x => x.ShippingAddress)
-				.FirstOrDefault(x => x.UserId == userId && x.Status == OrderStatus.Incomplete.ToString());
+				.FirstOrDefault(x => x.UserId == userId && x.Status == incompleteStatus);
 		}
 
 		private EfOrder GetOrderById(Db db, int orderId)
