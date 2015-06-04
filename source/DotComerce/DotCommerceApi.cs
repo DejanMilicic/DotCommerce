@@ -21,13 +21,13 @@ namespace DotCommerce
 			this.shippingCalculator = shippingCalculator;
 		}
 
-		private EfOrder GetOrderByUser(Db db, string userId)
+		private EfOrder GetIncompleteOrderForUser(Db db, string userId)
 		{
 			return db.Orders
 				.Include(x => x.OrderLines)
 				.Include(x => x.BillingAddress)
 				.Include(x => x.ShippingAddress)
-				.FirstOrDefault(x => x.UserId == userId);
+				.FirstOrDefault(x => x.UserId == userId && x.Status == OrderStatus.Incomplete.ToString());
 		}
 
 		private EfOrder GetOrderById(Db db, int orderId)
@@ -71,7 +71,7 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder efOrder = GetOrderByUser(db, userId);
+				EfOrder efOrder = this.GetIncompleteOrderForUser(db, userId);
 
 				if (efOrder == null)
 				{
