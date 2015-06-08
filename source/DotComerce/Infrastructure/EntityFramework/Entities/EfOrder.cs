@@ -9,7 +9,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 
-	[Table("DotCommerceOrder")]
+	[Table("DotCommerce_Order")]
 	class EfOrder
 	{
 		public EfOrder()

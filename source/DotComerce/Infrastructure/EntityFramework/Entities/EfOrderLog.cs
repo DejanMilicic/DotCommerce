@@ -4,7 +4,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 	using System;
 	using System.ComponentModel.DataAnnotations.Schema;
 
-	[Table("DotCommerceOrderLog")]
+	[Table("DotCommerce_OrderLog")]
 	class EfOrderLog
 	{
 		public int Id { get; set; }

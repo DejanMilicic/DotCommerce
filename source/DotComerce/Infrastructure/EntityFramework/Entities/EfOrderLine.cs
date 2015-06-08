@@ -3,7 +3,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 {
 	using System.ComponentModel.DataAnnotations.Schema;
 
-	[Table("DotCommerceOrderLine")]
+	[Table("DotCommerce_OrderLine")]
 	class EfOrderLine
 	{
 		public EfOrderLine()
