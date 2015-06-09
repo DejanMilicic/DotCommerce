@@ -79,37 +79,9 @@
     <Compile Include="Interfaces\IOrder.cs" />
     <Compile Include="Interfaces\IOrderLog.cs" />
     <Compile Include="Interfaces\IShippingCalculator.cs" />
-    <Compile Include="Migrations\201505121543188_Initial.cs" />
-    <Compile Include="Migrations\201505121543188_Initial.Designer.cs">
-      <DependentUpon>201505121543188_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505122104370_Corrections1.cs" />
-    <Compile Include="Migrations\201505122104370_Corrections1.Designer.cs">
-      <DependentUpon>201505122104370_Corrections1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505122146402_ForeignKey.cs" />
-    <Compile Include="Migrations\201505122146402_ForeignKey.Designer.cs">
-      <DependentUpon>201505122146402_ForeignKey.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505151628445_Addresses.cs" />
-    <Compile Include="Migrations\201505151628445_Addresses.Designer.cs">
-      <DependentUpon>201505151628445_Addresses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505151722532_AddressesCorrections.cs" />
-    <Compile Include="Migrations\201505151722532_AddressesCorrections.Designer.cs">
-      <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505192107369_OrderLog.cs" />
-    <Compile Include="Migrations\201505192107369_OrderLog.Designer.cs">
-      <DependentUpon>201505192107369_OrderLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505192129587_TableRenaming.cs" />
-    <Compile Include="Migrations\201505192129587_TableRenaming.Designer.cs">
-      <DependentUpon>201505192129587_TableRenaming.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505192143520_OrderLogCorrections.cs" />
-    <Compile Include="Migrations\201505192143520_OrderLogCorrections.Designer.cs">
-      <DependentUpon>201505192143520_OrderLogCorrections.cs</DependentUpon>
+    <Compile Include="Migrations\201506082339398_Initial.cs" />
+    <Compile Include="Migrations\201506082339398_Initial.Designer.cs">
+      <DependentUpon>201506082339398_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,29 +97,8 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505121543188_Initial.resx">
-      <DependentUpon>201505121543188_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505122104370_Corrections1.resx">
-      <DependentUpon>201505122104370_Corrections1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505122146402_ForeignKey.resx">
-      <DependentUpon>201505122146402_ForeignKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505151628445_Addresses.resx">
-      <DependentUpon>201505151628445_Addresses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505151722532_AddressesCorrections.resx">
-      <DependentUpon>201505151722532_AddressesCorrections.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505192107369_OrderLog.resx">
-      <DependentUpon>201505192107369_OrderLog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505192129587_TableRenaming.resx">
-      <DependentUpon>201505192129587_TableRenaming.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505192143520_OrderLogCorrections.resx">
-      <DependentUpon>201505192143520_OrderLogCorrections.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506082339398_Initial.resx">
+      <DependentUpon>201506082339398_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

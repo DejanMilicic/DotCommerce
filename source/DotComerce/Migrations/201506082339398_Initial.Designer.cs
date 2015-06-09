@@ -13,7 +13,7 @@ namespace DotCommerce.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201505121543188_Initial"; }
+            get { return "201506082339398_Initial"; }
         }
         
         string IMigrationMetadata.Source
