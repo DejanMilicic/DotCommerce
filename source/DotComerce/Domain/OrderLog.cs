@@ -7,7 +7,7 @@ namespace DotCommerce.Domain
 	class OrderLog : IOrderLog
 	{
 		public int Id { get; set; }
-		public int OrderId { get; set; }
+		public Guid OrderId { get; set; }
 		public DateTime DateTime { get; set; }
 		public LogAction Action { get; set; }
 		public string Value { get; set; }

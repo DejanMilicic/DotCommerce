@@ -1,6 +1,8 @@
 
 namespace DotCommerce
 {
+	using System;
+
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 
@@ -9,18 +11,18 @@ namespace DotCommerce
 		/// <summary>
 		/// For user return order with status incomplete, or create new one otherwise
 		/// </summary>
-		IOrder GetOrCreateOrder(string userId);
+		IOrder GetIncompleteOrder(string userId);
 
-		IOrder Get(int orderId);
+		IOrder Get(Guid orderId);
 
-		IOrder AddItemToOrder(int orderId, string itemid, int quantity, decimal price, 
+		void AddItemToOrder(IOrder order, string itemid, int quantity, decimal price, 
 			string name = "", decimal discount = 0, int weight = 0, string url = "", string imageUrl = "");
 
-		IOrder RemoveOrderLine(int orderLineId);
+		void RemoveOrderLine(int orderLineId);
 
-		IOrder ChangeQuantity(int orderLineId, int quantity);
+		void ChangeQuantity(int orderLineId, int quantity);
 
-		IOrder SetShippingAddress(int orderId, 
+		void SetShippingAddress(IOrder order, 
 			string title = "",
 			string firstName = "",
 			string lastName = "",
@@ -37,7 +39,7 @@ namespace DotCommerce
 			bool singleAddress =  false
 			);
 
-		IOrder SetBillingAddress(int orderId, 
+		void SetBillingAddress(IOrder order, 
 			string title = "",
 			string firstName = "",
 			string lastName = "",
@@ -54,8 +56,8 @@ namespace DotCommerce
 			bool singleAddress =  false
 			);
 
-		IOrder SetStatus(int orderId, OrderStatus status);
+		void SetStatus(IOrder order, OrderStatus status);
 
-		IOrder SetUser(int orderId, string userId);
+		void SetUser(IOrder order, string userId);
 	}
 }

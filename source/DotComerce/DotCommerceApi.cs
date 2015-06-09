@@ -21,6 +21,8 @@ namespace DotCommerce
 			this.shippingCalculator = shippingCalculator;
 		}
 
+		#region Private Methods
+
 		private EfOrder GetIncompleteOrderForUser(Db db, string userId)
 		{
 			string incompleteStatus = OrderStatus.Incomplete.ToString();
@@ -32,7 +34,7 @@ namespace DotCommerce
 				.FirstOrDefault(x => x.UserId == userId && x.Status == incompleteStatus);
 		}
 
-		private EfOrder GetOrderById(Db db, int orderId)
+		private EfOrder GetOrderById(Db db, Guid orderId)
 		{
 			EfOrder efOrder = db.Orders
 				.Include(x => x.OrderLines)
@@ -40,7 +42,7 @@ namespace DotCommerce
 				.Include(x => x.ShippingAddress)
 				.FirstOrDefault(x => x.Id == orderId);
 
-			if (efOrder == null) throw new Exception("Order with orderId does not exist");
+			//if (efOrder == null) throw new Exception("Order with orderId does not exist");
 
 			return efOrder;
 		}
@@ -54,7 +56,7 @@ namespace DotCommerce
 			return efOrderLine;
 		}
 
-		private void LogEvent(Db db, int orderId, LogAction action, string oldValue, string value)
+		private void LogEvent(Db db, Guid orderId, LogAction action, string oldValue, string value)
 		{
 			EfOrderLog logEntry = new EfOrderLog();
 			logEntry.OrderId = orderId;
@@ -63,32 +65,24 @@ namespace DotCommerce
 			logEntry.Value = value;
 			logEntry.OldValue = oldValue;
 			db.OrderLogs.Add(logEntry);
-			db.SaveChanges();			
+			//db.SaveChanges();			
 		}
+
+		#endregion
 
 		/// <summary>
 		/// For user return order with status incomplete, or create new one otherwise
 		/// </summary>
-		public IOrder GetOrCreateOrder(string userId)
+		public IOrder GetIncompleteOrder(string userId)
 		{
 			using (Db db = new Db())
 			{
 				EfOrder efOrder = this.GetIncompleteOrderForUser(db, userId);
-
-				if (efOrder == null)
-				{
-					efOrder = new EfOrder(userId);
-					db.Orders.Add(efOrder);
-					db.SaveChanges();
-
-					LogEvent(db, efOrder.Id, LogAction.CreateOrder, "", "");
-				}
-
-				return Mapper.Map<Order>(efOrder);
+				return efOrder == null ? new Order(userId) : Mapper.Map<Order>(efOrder);
 			}
 		}
 
-		public IOrder Get(int orderId)
+		public IOrder Get(Guid orderId)
 		{
 			using (Db db = new Db())
 			{
@@ -97,12 +91,34 @@ namespace DotCommerce
 			}
 		}
 
-		public IOrder AddItemToOrder(int orderId, string itemid, int quantity, decimal price, 
+		private EfOrder CreateNewOrder(Db db, IOrder order)
+		{
+			EfOrder newOrder = new EfOrder(order.UserId, order.Id);
+			db.Orders.Add(newOrder);
+			LogEvent(db, newOrder.Id, LogAction.CreateOrder, "", "");
+			return newOrder;
+		}
+
+		private EfOrder GetOrCreateById(Db db, IOrder order)
+		{
+			EfOrder efOrder = GetOrderById(db, order.Id);
+
+			if (efOrder != null)
+			{
+				return efOrder;
+			}
+			else
+			{
+				return CreateNewOrder(db, order);
+			}
+		}
+
+		public void AddItemToOrder(IOrder order, string itemid, int quantity, decimal price, 
 			string name = "", decimal discount = 0, int weight = 0, string url = "", string imageUrl = "")
 		{
 			using (Db db = new Db())
 			{
-				EfOrder efOrder = GetOrderById(db, orderId);
+				EfOrder efOrder = GetOrCreateById(db, order);
 				EfOrderLine efOrderLine = efOrder.FindOrderLine(itemid, price, discount, weight);
 
 				if (efOrderLine != null)
@@ -117,21 +133,21 @@ namespace DotCommerce
 				efOrder.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
 
-				LogEvent(db, orderId, LogAction.AddItemToOrder, "",
+				LogEvent(db, efOrder.Id, LogAction.AddItemToOrder, "",
 					"itemid:" + itemid + ", quantity: " + quantity + ", price: " + price + ", name: " + name + ", discount: " + discount + ", weight: " + weight + ", url: " + url + ", imageUrl: " + imageUrl);
 
-				return Mapper.Map<Order>(efOrder);
+				//return Mapper.Map<Order>(efOrder);
 			}
 		}
 
-		public IOrder RemoveOrderLine(int orderLineId)
+		public void RemoveOrderLine(int orderLineId)
 		{
 			using (Db db = new Db())
 			{
 				EfOrderLine orderline = GetOrderlineById(db, orderLineId);
 				if (orderline == null)
 				{
-					return null;
+					//return null;
 				}
 				else
 				{
@@ -146,18 +162,18 @@ namespace DotCommerce
 						LogEvent(db, order.Id, LogAction.RemoveOrderLine, "", orderLineId.ToString());
 					}
 
-					return Mapper.Map<Order>(order);
+					//return Mapper.Map<Order>(order);
 				}
 			}
 		}
 
-		public IOrder ChangeQuantity(int orderLineId, int quantity)
+		public void ChangeQuantity(int orderLineId, int quantity)
 		{
 			if (quantity < 0) throw new ArgumentException("quantity is below zero");
 
 			if (quantity == 0)
 			{
-				return this.RemoveOrderLine(orderLineId);
+				this.RemoveOrderLine(orderLineId);
 			}
 			else
 			{
@@ -174,13 +190,11 @@ namespace DotCommerce
 
 						LogEvent(db, order.Id, LogAction.ChangeQuantity, oldQuantity.ToString(), quantity.ToString());
 					}
-
-					return Mapper.Map<Order>(order);
 				}
 			}
 		}
 
-		public IOrder SetShippingAddress(int orderId, 
+		public void SetShippingAddress(IOrder order, 
 			string title = "",
 			string firstName = "",
 			string lastName = "",
@@ -199,21 +213,19 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder order = GetOrderById(db, orderId);
+				EfOrder efOrder = GetOrCreateById(db, order);
 				string oldShippingAddress = order.ShippingAddress == null ? "" : order.ShippingAddress.ToString();
 				EfAddress shippingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
 
-				order.ShippingAddress = shippingAddress;
-				order.Recalculate(this.shippingCalculator);
+				efOrder.ShippingAddress = shippingAddress;
+				efOrder.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
-
-				return Mapper.Map<Order>(order);
+				LogEvent(db, efOrder.Id, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
 			}
 		}
 
-		public IOrder SetBillingAddress(int orderId, 
+		public void SetBillingAddress(IOrder order, 
 			string title = "",
 			string firstName = "",
 			string lastName = "",
@@ -232,49 +244,42 @@ namespace DotCommerce
 		{
 			using (Db db = new Db())
 			{
-				EfOrder order = GetOrderById(db, orderId);
+				EfOrder efOrder = GetOrCreateById(db, order);
 				string oldBillingAddress = order.BillingAddress == null ? "" : order.BillingAddress.ToString();
 				EfAddress billingAddress = new EfAddress(title, firstName, lastName, company, street, streetNumber, city, zip, country, state, province, email, phone, singleAddress);
-				
-				order.BillingAddress = billingAddress;
-				order.Recalculate(this.shippingCalculator);
+
+				efOrder.BillingAddress = billingAddress;
+				efOrder.Recalculate(this.shippingCalculator);
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
-
-
-				return Mapper.Map<Order>(order);
+				LogEvent(db, efOrder.Id, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
 			}
 		}
 
-		public IOrder SetStatus(int orderId, OrderStatus status)
+		public void SetStatus(IOrder order, OrderStatus status)
 		{
 			using (Db db = new Db())
 			{
-				EfOrder order = GetOrderById(db, orderId);
-				string existingStatus = order.Status;
+				EfOrder efOrder = GetOrCreateById(db, order);
+				string existingStatus = efOrder.Status;
 
-				order.Status = status.ToString();
+				efOrder.Status = status.ToString();
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetOrderStatus, existingStatus, status.ToString());
-
-				return Mapper.Map<Order>(order);
+				LogEvent(db, efOrder.Id, LogAction.SetOrderStatus, existingStatus, status.ToString());
 			}
 		}
 
-		public IOrder SetUser(int orderId, string userId)
+		public void SetUser(IOrder order, string userId)
 		{
 			using (Db db = new Db())
 			{
-				EfOrder order = GetOrderById(db, orderId);
-				string existingUser = order.UserId;
-				order.UserId = userId;
+				EfOrder efOrder = GetOrCreateById(db, order);
+				string existingUser = efOrder.UserId;
+				efOrder.UserId = userId;
 				db.SaveChanges();
 
-				LogEvent(db, order.Id, LogAction.SetUser, existingUser, userId);
-
-				return Mapper.Map<Order>(order);
+				LogEvent(db, efOrder.Id, LogAction.SetUser, existingUser, userId);
 			}
 		}
 	}

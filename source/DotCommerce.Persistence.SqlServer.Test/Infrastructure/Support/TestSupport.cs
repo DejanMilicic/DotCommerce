@@ -8,10 +8,10 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 
 	public static class TestSupport
 	{
-		public static IOrder AddProductToOrder(this IDotCommerceApi dc, IOrder order, Product product)
+		public static void AddProductToOrder(this IDotCommerceApi dc, IOrder order, Product product)
 		{
-			return dc.AddItemToOrder(
-				orderId: order.Id,
+			dc.AddItemToOrder(
+				order: order,
 				itemid: product.Id,
 				quantity: product.Quantity,
 				price: product.Price,
@@ -22,20 +22,20 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 				imageUrl: product.ImageUrl);
 		}
 
-		public static IOrder SetShippingAddress(this IDotCommerceApi dc, IOrder order, Address address)
+		public static void SetShippingAddress(this IDotCommerceApi dc, IOrder order, Address address)
 		{
-			return dc.SetShippingAddress(
-				orderId: order.Id, 
+			dc.SetShippingAddress(
+				order: order, 
 				title: address.Title, firstName: address.FirstName, lastName: address.LastName, company: address.Company,
 				street: address.Street, streetNumber: address.StreetNumber, city: address.City, zip: address.Zip,
 				country: address.Country, state: address.State, province: address.Province, email: address.Email,
 				phone: address.Phone, singleAddress: address.SingleAddress);
 		}
 
-		public static IOrder SetBillingAddress(this IDotCommerceApi dc, IOrder order, Address address)
+		public static void SetBillingAddress(this IDotCommerceApi dc, IOrder order, Address address)
 		{
-			return dc.SetBillingAddress(
-				orderId: order.Id, 
+			dc.SetBillingAddress(
+				order: order, 
 				title: address.Title, firstName: address.FirstName, lastName: address.LastName, company: address.Company,
 				street: address.Street, streetNumber: address.StreetNumber, city: address.City, zip: address.Zip,
 				country: address.Country, state: address.State, province: address.Province, email: address.Email,

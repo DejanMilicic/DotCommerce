@@ -17,9 +17,9 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 
 		}
 
-		public EfOrder(string userId)
+		public EfOrder(string userId, Guid guid)
 		{
-			this.Id = 0;
+			this.Id = guid;
 			this.UserId = userId;
 			this.OrderLines = new List<EfOrderLine>();
 			this.Status = OrderStatus.Incomplete.ToString();
@@ -32,7 +32,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 			this.Price = 0;
 		}
 
-		public int Id { get; set; }
+		public Guid Id { get; set; }
 		public string UserId { get; set; }
 		public List<EfOrderLine> OrderLines { get; set; }
 		public string Status { get; set; }

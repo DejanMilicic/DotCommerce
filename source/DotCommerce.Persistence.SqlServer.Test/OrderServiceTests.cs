@@ -1,6 +1,7 @@
 ﻿
 namespace DotCommerce.Persistence.SqlServer.Test
 {
+	using System;
 	using System.Linq;
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
@@ -19,14 +20,15 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			TestSupport.ResetDatabase();
 			
 			dc = new DotCommerceApi(new ShippingCalculator());
-			order = dc.GetOrCreateOrder("user123");
+			order = dc.GetIncompleteOrder("user123");
 		}
 
 		public void AddNewItemToOrder(Product product)
 		{
-			order = dc.AddProductToOrder(order, product);
+			dc.AddProductToOrder(order, product);
+			order = dc.GetIncompleteOrder(order.UserId);
 
-			IOrder saved = dc.GetOrCreateOrder(order.UserId);
+			IOrder saved = dc.GetIncompleteOrder(order.UserId);
 			saved.OrderLines.Count().ShouldBe(1);
 			saved.OrderLines.Count().ShouldBe(order.OrderLines.Count());
 			saved.UserId.ShouldBe(order.UserId);
@@ -74,7 +76,8 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			dc.AddProductToOrder(order, product);
 			product.Quantity = secondQuantity;
-			order = dc.AddProductToOrder(order, product);
+			dc.AddProductToOrder(order, product);
+			order = dc.GetIncompleteOrder(order.UserId);
 
 			order.OrderLines.Count().ShouldBe(1);
 			order.ItemsCount.ShouldBe(totalQuantity);
@@ -82,13 +85,16 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 		public void RemoveOrderLine(Product product1, Product product2)
 		{
-			order = dc.AddProductToOrder(order, product1);
+			dc.AddProductToOrder(order, product1);
+			order = dc.Get(order.Id);
 			int orderLineForRemoval = order.OrderLines.First().Id;
 
-			order = dc.AddProductToOrder(order, product2);
+			dc.AddProductToOrder(order, product2);
+			order = dc.Get(order.Id);
 			order.OrderLines.Count().ShouldBe(2);
 
-			order = dc.RemoveOrderLine(orderLineForRemoval);
+			dc.RemoveOrderLine(orderLineForRemoval);
+			order = dc.GetIncompleteOrder(order.UserId);
 			order.OrderLines.Count().ShouldBe(1);
 			order.OrderLines.First().ItemId.ShouldBe(product2.Id);
 		}
@@ -97,35 +103,41 @@ namespace DotCommerce.Persistence.SqlServer.Test
 		{
 			product1.Quantity = 10;
 
-			order = dc.AddProductToOrder(order, product1);
+			dc.AddProductToOrder(order, product1);
+			order = dc.Get(order.Id);
 			order.ItemsCount.ShouldBe(10);
 
-			order = dc.ChangeQuantity(order.OrderLines.First().Id, 3);
+			dc.ChangeQuantity(order.OrderLines.First().Id, 3);
+			order = dc.GetIncompleteOrder(order.UserId);
 			order.ItemsCount.ShouldBe(3);
 		}
 
 		public void SetShippingAddress(Address shippingAddress)
 		{
-			order = dc.SetShippingAddress(order, shippingAddress);
+			dc.SetShippingAddress(order, shippingAddress);
+			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.ShippingAddress, shippingAddress).ShouldBe(true);
 		}
 
 		public void SetBillingAddress(Address billingAddress)
 		{
-			order = dc.SetBillingAddress(order, billingAddress);
+			dc.SetBillingAddress(order, billingAddress);
+			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.BillingAddress, billingAddress).ShouldBe(true);
 		}
 
 		public void SetStatus()
 		{
 			order.Status.ShouldBe(OrderStatus.Incomplete);
-			order = dc.SetStatus(order.Id, OrderStatus.Closed);
+			dc.SetStatus(order, OrderStatus.Closed);
+			order = dc.Get(order.Id);
 			order.Status.ShouldBe(OrderStatus.Closed);
 		}
 
 		public void SetUser(string userId)
 		{
-			order = dc.SetUser(order.Id, userId);
+			dc.SetUser(order, userId);
+			order = dc.GetIncompleteOrder(userId);
 			order.UserId.ShouldBe(userId);
 		}
 

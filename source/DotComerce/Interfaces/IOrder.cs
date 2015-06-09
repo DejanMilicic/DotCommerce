@@ -11,7 +11,7 @@ namespace DotCommerce.Interfaces
 		/// <summary>
 		/// Internal Id of the order
 		/// </summary>
-		int Id { get; }
+		Guid Id { get; }
 
 		/// <summary>
 		/// Id of a user. Can be primary key of a user in an external system 

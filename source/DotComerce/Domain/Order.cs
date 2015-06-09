@@ -7,7 +7,16 @@ namespace DotCommerce.Domain
 
 	class Order : IOrder
 	{
-		public int Id { get; set; }
+		public Order(string userId)
+		{
+			this.Id = Guid.NewGuid();
+			this.UserId = userId;
+			this.EditableOrderLines = new List<OrderLine>();
+			this.Status = OrderStatus.Incomplete;
+			this.EditableOrderLogs = new List<OrderLog>();
+		}
+
+		public Guid Id { get; set; }
 		public string UserId { get; set; }
 		public IEnumerable<IOrderLine> OrderLines 
 		{

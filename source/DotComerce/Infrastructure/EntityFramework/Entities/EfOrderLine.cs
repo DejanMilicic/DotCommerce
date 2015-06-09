@@ -1,6 +1,7 @@
 ﻿
 namespace DotCommerce.Infrastructure.EntityFramework.Entities
 {
+	using System;
 	using System.ComponentModel.DataAnnotations.Schema;
 
 	[Table("DotCommerce_OrderLine")]
@@ -41,7 +42,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public decimal Price { get; set; }
 
 		// Navigation properties
-		public int OrderId { get; set; }
+		public Guid OrderId { get; set; }
 		public EfOrder Order { get; set; }
 
 		public void Recalculate()
