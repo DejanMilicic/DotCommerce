@@ -54,7 +54,14 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 										},
 									};
 
-			checkpoint.Reset(ConfigurationManager.ConnectionStrings["DotCommerce"].ConnectionString);
+			try
+			{
+				checkpoint.Reset(ConfigurationManager.ConnectionStrings["DotCommerce"].ConnectionString);
+			}
+			catch
+			{
+				// we will get exception in he case when database is not existing
+			}
 		}
 	}
 }
