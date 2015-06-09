@@ -4,16 +4,20 @@ namespace DotCommerce.Infrastructure.EntityFramework
 	using System.Data.Entity;
 	using System.Data.Entity.ModelConfiguration.Conventions;
 	using DotCommerce.Infrastructure.EntityFramework.Entities;
+	using DotCommerce.Migrations;
 
 	class Db : DbContext
 	{
-		public Db(): base("DotCommerce")
+		public Db()
+			: base("DotCommerce") 
+			// Name of the connstring. If connstring does not exists, database with same
+			// name as connstring will be generated, in this case "DotCommerce"
 		{
 			// Turn off lazy loading for performance increase, use eager loading - .Include()
 			this.Configuration.LazyLoadingEnabled = false;
 			this.Configuration.ProxyCreationEnabled = false;
 
-//			Database.SetInitializer(new MigrateDatabaseToLatestVersion<Db, Configuration>());
+			Database.SetInitializer(new MigrateDatabaseToLatestVersion<Db, Configuration>());
 			this.Database.Initialize(false);
 		}
 
