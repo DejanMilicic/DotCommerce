@@ -1,6 +1,8 @@
 ﻿
 namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 {
+	using System.Configuration;
+
 	using global::DotCommerce.Interfaces;
 	using global::DotCommerce.Persistence.SqlServer.Test.Infrastructure.DTO;
 
@@ -52,7 +54,7 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 										},
 									};
 
-			checkpoint.Reset(@"Server=.\SQLEXPRESS;Database=DotCommerce;Integrated Security=SSPI");
+			checkpoint.Reset(ConfigurationManager.ConnectionStrings["DotCommerce"].ConnectionString);
 		}
 	}
 }
