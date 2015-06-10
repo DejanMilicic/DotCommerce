@@ -2,6 +2,8 @@
 namespace DotCommerce
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq.Expressions;
 
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
@@ -59,5 +61,15 @@ namespace DotCommerce
 		void SetStatus(IOrder order, OrderStatus status);
 
 		void SetUser(IOrder order, string userId);
+
+		/// <summary>
+		/// Get orders, paged, sorted by descending created date
+		/// pageIndex is zero-based
+		/// </summary>
+		List<IOrder> GetOrders(int pageIndex, int pageSize,
+			OrderStatus orderStatus = null,
+			string userId = null);
+
+		List<IOrderLog> GetLogEntries(Guid orderId);
 	}
 }

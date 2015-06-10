@@ -2,8 +2,11 @@
 namespace DotCommerce
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Data.Entity;
 	using System.Linq;
+	using System.Linq.Expressions;
+
 	using AutoMapper;
 	using DotCommerce.Domain;
 	using DotCommerce.Infrastructure;
@@ -23,28 +26,46 @@ namespace DotCommerce
 
 		#region Private Methods
 
-		private EfOrder GetIncompleteOrderForUser(Db db, string userId)
+		private IQueryable<EfOrder> GetQueryableOrders(
+			Db db, 
+			OrderStatus orderStatus = null,
+			string userId = null,
+			Expression<Func<EfOrder, bool>> criteria = null)
 		{
-			string incompleteStatus = OrderStatus.Incomplete.ToString();
-
-			return db.Orders
+			var query = db.Orders
 				.Include(x => x.OrderLines)
 				.Include(x => x.BillingAddress)
-				.Include(x => x.ShippingAddress)
-				.FirstOrDefault(x => x.UserId == userId && x.Status == incompleteStatus);
+				.Include(x => x.ShippingAddress);
+
+			if (orderStatus != null)
+			{
+				string orderStatusString = orderStatus.ToString();
+				query = query.Where(x => x.Status == orderStatusString);
+			}
+
+			if (userId != null)
+			{
+				query = query.Where(x => x.UserId == userId);
+			}
+
+			if (criteria != null)
+			{
+				query = query.Where(criteria);
+			}
+
+			return query;
+		}
+
+		private EfOrder GetIncompleteOrderForUser(Db db, string userId)
+		{
+			return this.GetQueryableOrders(db, userId: userId, orderStatus: OrderStatus.Incomplete)
+				.FirstOrDefault();
 		}
 
 		private EfOrder GetOrderById(Db db, Guid orderId)
 		{
-			EfOrder efOrder = db.Orders
-				.Include(x => x.OrderLines)
-				.Include(x => x.BillingAddress)
-				.Include(x => x.ShippingAddress)
-				.FirstOrDefault(x => x.Id == orderId);
-
-			//if (efOrder == null) throw new Exception("Order with orderId does not exist");
-
-			return efOrder;
+			return this.GetQueryableOrders(db, criteria: x => x.Id == orderId)
+				.FirstOrDefault();
 		}
 
 		private EfOrderLine GetOrderlineById(Db db, int orderlineId)
@@ -65,7 +86,6 @@ namespace DotCommerce
 			logEntry.Value = value;
 			logEntry.OldValue = oldValue;
 			db.OrderLogs.Add(logEntry);
-			//db.SaveChanges();			
 		}
 
 		#endregion
@@ -101,16 +121,7 @@ namespace DotCommerce
 
 		private EfOrder GetOrCreateById(Db db, IOrder order)
 		{
-			EfOrder efOrder = GetOrderById(db, order.Id);
-
-			if (efOrder != null)
-			{
-				return efOrder;
-			}
-			else
-			{
-				return CreateNewOrder(db, order);
-			}
+			return this.GetOrderById(db, order.Id) ?? this.CreateNewOrder(db, order);
 		}
 
 		public void AddItemToOrder(IOrder order, string itemid, int quantity, decimal price, 
@@ -131,12 +142,11 @@ namespace DotCommerce
 				}
 
 				efOrder.Recalculate(this.shippingCalculator);
-				db.SaveChanges();
 
 				LogEvent(db, efOrder.Id, LogAction.AddItemToOrder, "",
 					"itemid:" + itemid + ", quantity: " + quantity + ", price: " + price + ", name: " + name + ", discount: " + discount + ", weight: " + weight + ", url: " + url + ", imageUrl: " + imageUrl);
 
-				//return Mapper.Map<Order>(efOrder);
+				db.SaveChanges();
 			}
 		}
 
@@ -157,12 +167,11 @@ namespace DotCommerce
 						db.Entry(orderline).State = EntityState.Deleted;
 						order.OrderLines.Remove(orderline);
 						order.Recalculate(this.shippingCalculator);
-						db.SaveChanges();
 
 						LogEvent(db, order.Id, LogAction.RemoveOrderLine, "", orderLineId.ToString());
-					}
 
-					//return Mapper.Map<Order>(order);
+						db.SaveChanges();
+					}
 				}
 			}
 		}
@@ -186,9 +195,10 @@ namespace DotCommerce
 						int oldQuantity = orderline.Quantity;
 						orderline.Quantity = quantity;
 						order.Recalculate(this.shippingCalculator);
-						db.SaveChanges();
 
 						LogEvent(db, order.Id, LogAction.ChangeQuantity, oldQuantity.ToString(), quantity.ToString());
+
+						db.SaveChanges();
 					}
 				}
 			}
@@ -219,9 +229,10 @@ namespace DotCommerce
 
 				efOrder.ShippingAddress = shippingAddress;
 				efOrder.Recalculate(this.shippingCalculator);
-				db.SaveChanges();
 
 				LogEvent(db, efOrder.Id, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
+
+				db.SaveChanges();
 			}
 		}
 
@@ -250,9 +261,10 @@ namespace DotCommerce
 
 				efOrder.BillingAddress = billingAddress;
 				efOrder.Recalculate(this.shippingCalculator);
-				db.SaveChanges();
 
 				LogEvent(db, efOrder.Id, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
+
+				db.SaveChanges();
 			}
 		}
 
@@ -264,9 +276,10 @@ namespace DotCommerce
 				string existingStatus = efOrder.Status;
 
 				efOrder.Status = status.ToString();
-				db.SaveChanges();
 
 				LogEvent(db, efOrder.Id, LogAction.SetOrderStatus, existingStatus, status.ToString());
+
+				db.SaveChanges();
 			}
 		}
 
@@ -277,9 +290,52 @@ namespace DotCommerce
 				EfOrder efOrder = GetOrCreateById(db, order);
 				string existingUser = efOrder.UserId;
 				efOrder.UserId = userId;
-				db.SaveChanges();
 
 				LogEvent(db, efOrder.Id, LogAction.SetUser, existingUser, userId);
+
+				db.SaveChanges();
+			}
+		}
+		
+		/// <summary>
+		/// Get orders, paged, sorted by descending created date
+		/// pageIndex is zero-based
+		/// </summary>
+		public List<IOrder> GetOrders(int pageIndex, int pageSize,
+			OrderStatus orderStatus = null,
+			string userId = null)
+		{
+			List<IOrder> orders = new List<IOrder>();
+
+			using (Db db = new Db())
+			{
+				var query = this.GetQueryableOrders(db, orderStatus, userId);
+				query = query.OrderByDescending(x => x.CreatedOn);
+				query = query.Skip(pageIndex * pageSize).Take(pageSize);
+				
+				// read-only operation, no need to track changes
+				query = query.AsNoTracking();
+
+				orders.AddRange(query.ToList().Select(Mapper.Map<Order>));
+			}
+
+			return orders;
+		}
+
+		public List<IOrderLog> GetLogEntries(Guid orderId)
+		{
+			using (Db db = new Db())
+			{
+				List<IOrderLog> orderLogs = new List<IOrderLog>();
+
+				var orderLogsQuery = db.OrderLogs.Where(x => x.OrderId == orderId);
+				
+				// read-only operation, no need to track changes
+				orderLogsQuery = orderLogsQuery.AsNoTracking();
+
+				orderLogs.AddRange(Mapper.Map<List<OrderLog>>(orderLogsQuery));
+
+				return orderLogs;
 			}
 		}
 	}

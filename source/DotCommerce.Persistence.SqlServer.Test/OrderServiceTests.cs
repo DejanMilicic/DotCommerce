@@ -182,10 +182,56 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			                           });
 		}
 
-		public void GetOrders()
+		public void GetOrders(string user1, string user2, Product product1, Product product2)
 		{
-			// todo complete test
-			var orders = dc.GetOrders(0, 100);
+			// prepare test data
+			int user1TotalOrders = 6;
+			int user2TotalOrders = 9;
+			int totalOrders = user1TotalOrders + user2TotalOrders;
+			int pendingOrders = 3;
+			int readyForDispatchOrders = 2;
+			int closedOrders = totalOrders - pendingOrders - readyForDispatchOrders;
+
+			List<Guid> allOrders = new List<Guid>();
+
+			for (int i = 0; i < user1TotalOrders; i++)
+			{
+				order = dc.GetIncompleteOrder(user1);
+				dc.AddProductToOrder(order, product1);
+				dc.SetStatus(order, OrderStatus.Closed);
+				allOrders.Add(order.Id);
+			}
+
+			for (int i = 0; i < user2TotalOrders; i++)
+			{
+				order = dc.GetIncompleteOrder(user2);
+				dc.AddProductToOrder(order, product2);
+				dc.SetStatus(order, OrderStatus.Closed);
+				allOrders.Add(order.Id);
+			}
+
+			for (int i = 0; i < pendingOrders; i++)
+			{
+				order = dc.Get(allOrders[i]);
+				dc.SetStatus(order, OrderStatus.Pending);
+			}
+
+			for (int i = pendingOrders; i < pendingOrders + readyForDispatchOrders; i++)
+			{
+				order = dc.Get(allOrders[i]);
+				dc.SetStatus(order, OrderStatus.ReadyForDispatch);
+			}
+
+			// verify
+			dc.GetOrders(0, 100).Count.ShouldBe(totalOrders);
+			dc.GetOrders(0, 100, userId: user1).Count.ShouldBe(user1TotalOrders);
+			dc.GetOrders(0, 100, userId: user2).Count.ShouldBe(user2TotalOrders);
+			dc.GetOrders(0, 100, orderStatus: OrderStatus.Closed).Count.ShouldBe(closedOrders);
+			dc.GetOrders(0, 3, orderStatus: OrderStatus.Closed).Count.ShouldBe(3);
+			dc.GetOrders(1, 9, orderStatus: OrderStatus.Closed).Count.ShouldBe(1);
+
+			dc.GetOrders(0, 100, orderStatus: OrderStatus.Pending).Count.ShouldBe(pendingOrders);
+			dc.GetOrders(0, 100, orderStatus: OrderStatus.ReadyForDispatch).Count.ShouldBe(readyForDispatchOrders);
 		}
 
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
