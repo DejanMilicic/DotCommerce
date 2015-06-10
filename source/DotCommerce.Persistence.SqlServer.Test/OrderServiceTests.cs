@@ -2,7 +2,10 @@
 namespace DotCommerce.Persistence.SqlServer.Test
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
+	using System.Runtime.InteropServices.ComTypes;
+
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce;
@@ -28,45 +31,32 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			dc.AddProductToOrder(order, product);
 			order = dc.GetIncompleteOrder(order.UserId);
 
-			IOrder saved = dc.GetIncompleteOrder(order.UserId);
-			saved.OrderLines.Count().ShouldBe(1);
-			saved.OrderLines.Count().ShouldBe(order.OrderLines.Count());
-			saved.UserId.ShouldBe(order.UserId);
-			saved.Status.ShouldBe(OrderStatus.Incomplete);
-			saved.Status.ShouldBe(order.Status);
-			saved.ItemsCount.ShouldBe(saved.OrderLines.Sum(x => x.Quantity));
-			saved.ItemsCount.ShouldBe(order.ItemsCount);
+			order.OrderLines.Count().ShouldBe(1);
+			order.UserId.ShouldBe(order.UserId);
+			order.Status.ShouldBe(OrderStatus.Incomplete);
+			order.ItemsCount.ShouldBe(order.OrderLines.Sum(x => x.Quantity));
 
-			saved.Weight.ShouldBe(saved.OrderLines.Sum(x => x.Weight));
-			saved.Weight.ShouldBe(order.Weight);
-			saved.OrderLinesPrice.ShouldBe(saved.OrderLines.Sum(x => x.Price));
-			saved.OrderLinesPrice.ShouldBe(order.OrderLinesPrice);
-			saved.Shipping.ShouldBe(order.Shipping);
-			saved.Price.ShouldBe(saved.OrderLinesPrice + saved.Shipping);
-			saved.Price.ShouldBe(order.Price);
+			order.Weight.ShouldBe(order.OrderLines.Sum(x => x.Weight));
+			order.OrderLinesPrice.ShouldBe(order.OrderLines.Sum(x => x.Price));
+			order.Price.ShouldBe(order.OrderLinesPrice + order.Shipping);
 
-			IOrderLine savedOl = saved.OrderLines.First();
-			IOrderLine ol = order.OrderLines.First();
-			savedOl.ItemId.ShouldBe(product.Id);
-			savedOl.ItemId.ShouldBe(ol.ItemId);
-			savedOl.ItemName.ShouldBe(product.Name);
-			savedOl.ItemName.ShouldBe(ol.ItemName);
-			savedOl.ItemPrice.ShouldBe(product.Price);
-			savedOl.ItemPrice.ShouldBe(ol.ItemPrice);
-			savedOl.ItemDiscount.ShouldBe(product.Discount);
-			savedOl.ItemDiscount.ShouldBe(ol.ItemDiscount);
-			savedOl.ItemWeight.ShouldBe(product.Weight);
-			savedOl.ItemWeight.ShouldBe(ol.ItemWeight);
-			savedOl.ItemUrl.ShouldBe(product.Url);
-			savedOl.ItemUrl.ShouldBe(ol.ItemUrl);
-			savedOl.ItemImageUrl.ShouldBe(product.ImageUrl);
-			savedOl.ItemImageUrl.ShouldBe(ol.ItemImageUrl);
-			savedOl.Quantity.ShouldBe(product.Quantity);
-			savedOl.Quantity.ShouldBe(ol.Quantity);
-			savedOl.Weight.ShouldBe(product.Weight * product.Quantity);
-			savedOl.Weight.ShouldBe(ol.Weight);
-			savedOl.Price.ShouldBe(product.Price * product.Quantity * ((100 - product.Discount) / (100)));
-			savedOl.Price.ShouldBe(ol.Price);
+			IOrderLine orderLine = order.OrderLines.First();
+			orderLine.ItemId.ShouldBe(product.Id);
+			orderLine.ItemName.ShouldBe(product.Name);
+			orderLine.ItemPrice.ShouldBe(product.Price);
+			orderLine.ItemDiscount.ShouldBe(product.Discount);
+			orderLine.ItemWeight.ShouldBe(product.Weight);
+			orderLine.ItemUrl.ShouldBe(product.Url);
+			orderLine.ItemImageUrl.ShouldBe(product.ImageUrl);
+			orderLine.Quantity.ShouldBe(product.Quantity);
+			orderLine.Weight.ShouldBe(product.Weight * product.Quantity);
+			orderLine.Price.ShouldBe(product.Price * product.Quantity * ((100 - product.Discount) / (100)));
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.AddItemToOrder
+			                           });
 		}
 
 		public void AddExistingItemToOrder(Product product)
@@ -76,11 +66,19 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			dc.AddProductToOrder(order, product);
 			product.Quantity = secondQuantity;
+
 			dc.AddProductToOrder(order, product);
 			order = dc.GetIncompleteOrder(order.UserId);
 
 			order.OrderLines.Count().ShouldBe(1);
 			order.ItemsCount.ShouldBe(totalQuantity);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.AddItemToOrder,
+										   LogAction.AddItemToOrder
+			                           });
 		}
 
 		public void RemoveOrderLine(Product product1, Product product2)
@@ -97,6 +95,14 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetIncompleteOrder(order.UserId);
 			order.OrderLines.Count().ShouldBe(1);
 			order.OrderLines.First().ItemId.ShouldBe(product2.Id);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.AddItemToOrder,
+										   LogAction.AddItemToOrder,
+										   LogAction.RemoveOrderLine
+			                           });
 		}
 
 		public void ChangeQuantity(Product product1)
@@ -110,35 +116,76 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			dc.ChangeQuantity(order.OrderLines.First().Id, 3);
 			order = dc.GetIncompleteOrder(order.UserId);
 			order.ItemsCount.ShouldBe(3);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.AddItemToOrder,
+										   LogAction.ChangeQuantity
+			                           });
 		}
 
 		public void SetShippingAddress(Address shippingAddress)
 		{
 			dc.SetShippingAddress(order, shippingAddress);
+
 			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.ShippingAddress, shippingAddress).ShouldBe(true);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.SetShippingAddress
+			                           });
 		}
 
 		public void SetBillingAddress(Address billingAddress)
 		{
 			dc.SetBillingAddress(order, billingAddress);
+
 			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.BillingAddress, billingAddress).ShouldBe(true);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.SetBillingAddress
+			                           });
 		}
 
 		public void SetStatus()
 		{
 			order.Status.ShouldBe(OrderStatus.Incomplete);
 			dc.SetStatus(order, OrderStatus.Closed);
+
 			order = dc.Get(order.Id);
 			order.Status.ShouldBe(OrderStatus.Closed);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.SetOrderStatus
+			                           });
 		}
 
 		public void SetUser(string userId)
 		{
 			dc.SetUser(order, userId);
+
 			order = dc.GetIncompleteOrder(userId);
 			order.UserId.ShouldBe(userId);
+
+			dc.VerifyLogEntries(order, new List<LogAction>
+			                           {
+				                           LogAction.CreateOrder,
+										   LogAction.SetUser
+			                           });
+		}
+
+		public void GetOrders()
+		{
+			// todo complete test
+			var orders = dc.GetOrders(0, 100);
 		}
 
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
