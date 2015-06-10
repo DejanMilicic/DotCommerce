@@ -1,12 +1,16 @@
 ﻿
 namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 {
+	using System.Collections.Generic;
 	using System.Configuration;
 
+	using global::DotCommerce.Domain;
 	using global::DotCommerce.Interfaces;
 	using global::DotCommerce.Persistence.SqlServer.Test.Infrastructure.DTO;
 
 	using Respawn;
+
+	using Shouldly;
 
 	public static class TestSupport
 	{
@@ -61,6 +65,16 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 			catch
 			{
 				// we will get exception in he case when database is not existing
+			}
+		}
+
+		public static void VerifyLogEntries(this IDotCommerceApi dc, IOrder order, List<LogAction> actions)
+		{
+			var log = dc.GetLogEntries(order.Id);
+			log.Count.ShouldBe(actions.Count);
+			for (int i = 0; i < actions.Count; i++)
+			{
+				log[i].Action.ShouldBe(actions[i]);
 			}
 		}
 	}
