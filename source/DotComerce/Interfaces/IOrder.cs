@@ -44,6 +44,12 @@ namespace DotCommerce.Interfaces
 		
 		IOrderAddress BillingAddress { get; }
 
-		IEnumerable<IOrderLog> OrderLogs { get; } 
+		IEnumerable<IOrderLog> OrderLogs { get; }
+
+		/// <summary>
+		/// Ordinal number of completed order, can be used for invoicing
+		/// purposes or for communication with customer, as order reference number
+		/// </summary>
+		int? Ordinal { get; }
 	}
 }

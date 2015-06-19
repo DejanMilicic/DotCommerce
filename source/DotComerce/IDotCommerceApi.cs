@@ -71,5 +71,7 @@ namespace DotCommerce
 			string userId = null);
 
 		List<IOrderLog> GetLogEntries(Guid orderId);
+
+		void AssignOrdinal(IOrder order);
 	}
 }

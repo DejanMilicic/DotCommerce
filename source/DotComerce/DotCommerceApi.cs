@@ -338,5 +338,27 @@ namespace DotCommerce
 				return orderLogs;
 			}
 		}
+
+		public void AssignOrdinal(IOrder order)
+		{
+			using (Db db = new Db())
+			{
+				int ordinal = 1;
+
+				EfOrder efOrder = GetOrCreateById(db, order);
+
+				int? largestOrdinal = db.Orders.Max(x => x.Ordinal);
+				if (largestOrdinal.HasValue)
+				{
+					ordinal = largestOrdinal.Value + 1;
+				}
+
+				efOrder = this.GetOrderById(db, order.Id);
+				efOrder.Ordinal = ordinal;
+				LogEvent(db, efOrder.Id, LogAction.SetOrdinal, "", ordinal.ToString());
+
+				db.SaveChanges();
+			}
+		}
 	}
 }

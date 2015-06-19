@@ -234,6 +234,22 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			dc.GetOrders(0, 100, orderStatus: OrderStatus.ReadyForDispatch).Count.ShouldBe(readyForDispatchOrders);
 		}
 
+		public void AssignOrdinal()
+		{
+			dc.SetStatus(order, OrderStatus.Closed);
+			dc.AssignOrdinal(order);
+
+			order = dc.Get(order.Id);
+			order.Ordinal.ShouldBe(1);
+
+			IOrder order2 = dc.GetIncompleteOrder(order.UserId);
+			dc.SetStatus(order2, OrderStatus.Closed);
+			dc.AssignOrdinal(order2);
+
+			order2 = dc.Get(order2.Id);
+			order2.Ordinal.ShouldBe(2);
+		}
+
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
 		{
 			return orderAddress.Title == address.Title

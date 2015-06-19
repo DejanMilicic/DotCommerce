@@ -43,6 +43,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public decimal OrderLinesPrice { get; set; } 
 		public decimal Shipping { get; set; }
 		public decimal Price { get; set; }
+		public int? Ordinal { get; set; }
 		public EfAddress ShippingAddress { get; set; }
 		public EfAddress BillingAddress { get; set; }
 		public List<EfOrderLog> OrderLogs { get; set; }
