@@ -301,7 +301,7 @@ namespace DotCommerce
 		/// Get orders, paged, sorted by descending created date
 		/// pageIndex is zero-based
 		/// </summary>
-		public List<IOrder> GetOrders(int pageIndex, int pageSize,
+		public List<IOrder> GetOrders(int pageIndex, int pageSize, out int totalCount,
 			OrderStatus orderStatus = null,
 			string userId = null)
 		{
@@ -311,6 +311,9 @@ namespace DotCommerce
 			{
 				var query = this.GetQueryableOrders(db, orderStatus, userId);
 				query = query.OrderByDescending(x => x.CreatedOn);
+				// get total count before paging is applied
+				totalCount = query.Count();
+
 				query = query.Skip(pageIndex * pageSize).Take(pageSize);
 				
 				// read-only operation, no need to track changes

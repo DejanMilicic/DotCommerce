@@ -222,16 +222,31 @@ namespace DotCommerce.Persistence.SqlServer.Test
 				dc.SetStatus(order, OrderStatus.ReadyForDispatch);
 			}
 
+			int totalCount;
 			// verify
-			dc.GetOrders(0, 100).Count.ShouldBe(totalOrders);
-			dc.GetOrders(0, 100, userId: user1).Count.ShouldBe(user1TotalOrders);
-			dc.GetOrders(0, 100, userId: user2).Count.ShouldBe(user2TotalOrders);
-			dc.GetOrders(0, 100, orderStatus: OrderStatus.Closed).Count.ShouldBe(closedOrders);
-			dc.GetOrders(0, 3, orderStatus: OrderStatus.Closed).Count.ShouldBe(3);
-			dc.GetOrders(1, 9, orderStatus: OrderStatus.Closed).Count.ShouldBe(1);
+			dc.GetOrders(0, 100, out totalCount).Count.ShouldBe(totalOrders);
+			totalCount.ShouldBe(totalOrders);
 
-			dc.GetOrders(0, 100, orderStatus: OrderStatus.Pending).Count.ShouldBe(pendingOrders);
-			dc.GetOrders(0, 100, orderStatus: OrderStatus.ReadyForDispatch).Count.ShouldBe(readyForDispatchOrders);
+			dc.GetOrders(0, 100, out totalCount, userId: user1).Count.ShouldBe(user1TotalOrders);
+			totalCount.ShouldBe(user1TotalOrders);
+
+			dc.GetOrders(0, 100, out totalCount, userId: user2).Count.ShouldBe(user2TotalOrders);
+			totalCount.ShouldBe(user2TotalOrders);
+
+			dc.GetOrders(0, 100, out totalCount, orderStatus: OrderStatus.Closed).Count.ShouldBe(closedOrders);
+			totalCount.ShouldBe(closedOrders);
+
+			dc.GetOrders(0, 3, out totalCount, orderStatus: OrderStatus.Closed).Count.ShouldBe(3);
+			totalCount.ShouldBe(closedOrders);
+
+			dc.GetOrders(1, 9, out totalCount, orderStatus: OrderStatus.Closed).Count.ShouldBe(1);
+			totalCount.ShouldBe(closedOrders);
+
+			dc.GetOrders(0, 100, out totalCount, orderStatus: OrderStatus.Pending).Count.ShouldBe(pendingOrders);
+			totalCount.ShouldBe(pendingOrders);
+
+			dc.GetOrders(0, 100, out totalCount, orderStatus: OrderStatus.ReadyForDispatch).Count.ShouldBe(readyForDispatchOrders);
+			totalCount.ShouldBe(readyForDispatchOrders);
 		}
 
 		public void AssignOrdinal()

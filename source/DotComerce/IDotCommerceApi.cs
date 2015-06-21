@@ -66,7 +66,7 @@ namespace DotCommerce
 		/// Get orders, paged, sorted by descending created date
 		/// pageIndex is zero-based
 		/// </summary>
-		List<IOrder> GetOrders(int pageIndex, int pageSize,
+		List<IOrder> GetOrders(int pageIndex, int pageSize, out int totalCount,
 			OrderStatus orderStatus = null,
 			string userId = null);
 
