@@ -73,5 +73,7 @@ namespace DotCommerce
 		List<IOrderLog> GetLogEntries(Guid orderId);
 
 		void AssignOrdinal(IOrder order);
+
+		void SetNotes(IOrder order, string notes);
 	}
 }

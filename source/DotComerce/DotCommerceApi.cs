@@ -296,6 +296,20 @@ namespace DotCommerce
 				db.SaveChanges();
 			}
 		}
+
+		public void SetNotes(IOrder order, string notes)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder efOrder = GetOrCreateById(db, order);
+				string existingNotes = efOrder.Notes;
+				efOrder.Notes = notes;
+
+				LogEvent(db, efOrder.Id, LogAction.SetNotes, existingNotes, notes);
+
+				db.SaveChanges();
+			}			
+		}
 		
 		/// <summary>
 		/// Get orders, paged, sorted by descending created date

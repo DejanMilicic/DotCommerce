@@ -46,6 +46,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public int? Ordinal { get; set; }
 		public EfAddress ShippingAddress { get; set; }
 		public EfAddress BillingAddress { get; set; }
+		public string Notes { get; set; }
 		public List<EfOrderLog> OrderLogs { get; set; }
 
 		public EfOrderLine FindOrderLine(string itemId, decimal itemPrice, decimal itemDiscount, int itemWeight)

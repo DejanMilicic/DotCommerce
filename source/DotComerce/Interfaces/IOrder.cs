@@ -51,5 +51,11 @@ namespace DotCommerce.Interfaces
 		/// purposes or for communication with customer, as order reference number
 		/// </summary>
 		int? Ordinal { get; }
+
+		/// <summary>
+		/// Order notes - can be custom text added by customer
+		/// or note added by shop owner
+		/// </summary>
+		string Notes { get; }
 	}
 }

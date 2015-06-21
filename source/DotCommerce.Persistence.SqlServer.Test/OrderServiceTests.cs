@@ -265,6 +265,15 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order2.Ordinal.ShouldBe(2);
 		}
 
+		public void SetNotes(string notes)
+		{
+			dc.SetStatus(order, OrderStatus.Closed);
+			dc.SetNotes(order, notes);
+
+			order = dc.Get(order.Id);
+			order.Notes.ShouldBe(notes);
+		}
+
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
 		{
 			return orderAddress.Title == address.Title
