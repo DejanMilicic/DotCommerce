@@ -50,6 +50,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.4\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,7 +63,10 @@
   <ItemGroup>
     <Compile Include="Domain\LogAction.cs" />
     <Compile Include="Domain\OrderAddress.cs" />
+    <Compile Include="Domain\SortingCriteria.cs" />
+    <Compile Include="Domain\SortingDirection.cs" />
     <Compile Include="Domain\OrderLog.cs" />
+    <Compile Include="Domain\SortingField.cs" />
     <Compile Include="Infrastructure\EntityFramework\Entities\EfOrderLog.cs" />
     <Compile Include="Interfaces\IOrderAddress.cs" />
     <Compile Include="Domain\OrderStatus.cs" />
