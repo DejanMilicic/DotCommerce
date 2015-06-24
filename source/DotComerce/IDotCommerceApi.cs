@@ -68,7 +68,8 @@ namespace DotCommerce
 		/// </summary>
 		List<IOrder> GetOrders(int pageIndex, int pageSize, out int totalCount,
 			OrderStatus orderStatus = null,
-			string userId = null);
+			string userId = null,
+			List<SortingCriteria> sortBy = null);
 
 		List<IOrderLog> GetLogEntries(Guid orderId);
 

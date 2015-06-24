@@ -223,7 +223,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			}
 
 			int totalCount;
-			// verify
+			// verify counts
 			dc.GetOrders(0, 100, out totalCount).Count.ShouldBe(totalOrders);
 			totalCount.ShouldBe(totalOrders);
 
@@ -247,6 +247,15 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			dc.GetOrders(0, 100, out totalCount, orderStatus: OrderStatus.ReadyForDispatch).Count.ShouldBe(readyForDispatchOrders);
 			totalCount.ShouldBe(readyForDispatchOrders);
+
+			// verify sorting
+			List<IOrder> res = dc.GetOrders(0, 100, out totalCount, sortBy: new List<SortingCriteria>{new SortingCriteria{ Field = SortingField.Weight, Direction = SortingDirection.Ascending}});
+			List<IOrder> sortedRes = res.OrderBy(x => x.Weight).ToList();
+			res.ShouldBe(sortedRes);
+
+			res = dc.GetOrders(0, 100, out totalCount, sortBy: new List<SortingCriteria>{new SortingCriteria{ Field = SortingField.ItemsCount, Direction = SortingDirection.Descending}});
+			sortedRes = res.OrderByDescending(x => x.ItemsCount).ToList();
+			res.ShouldBe(sortedRes);
 		}
 
 		public void AssignOrdinal()

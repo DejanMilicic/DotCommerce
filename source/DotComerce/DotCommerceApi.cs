@@ -6,6 +6,7 @@ namespace DotCommerce
 	using System.Data.Entity;
 	using System.Linq;
 	using System.Linq.Expressions;
+	using System.Linq.Dynamic;
 
 	using AutoMapper;
 	using DotCommerce.Domain;
@@ -317,7 +318,8 @@ namespace DotCommerce
 		/// </summary>
 		public List<IOrder> GetOrders(int pageIndex, int pageSize, out int totalCount,
 			OrderStatus orderStatus = null,
-			string userId = null)
+			string userId = null,
+			List<SortingCriteria> sortBy = null)
 		{
 			List<IOrder> orders = new List<IOrder>();
 
@@ -328,6 +330,12 @@ namespace DotCommerce
 				// get total count before paging is applied
 				totalCount = query.Count();
 
+				// sorting
+				if (sortBy != null && sortBy.Any())
+				{
+					query = query.OrderBy(String.Join(", ", sortBy.Select(x => x.ToString())));
+				}
+				
 				query = query.Skip(pageIndex * pageSize).Take(pageSize);
 				
 				// read-only operation, no need to track changes
