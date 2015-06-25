@@ -12,5 +12,17 @@ namespace DotCommerce.Domain
 			: base(value, displayName)
 		{
 		}
+
+		public SortingDirection Reverse()
+		{
+			if (this == Ascending)
+			{
+				return Descending;
+			}
+			else
+			{
+				return Ascending;
+			}
+		}
 	}
 }
