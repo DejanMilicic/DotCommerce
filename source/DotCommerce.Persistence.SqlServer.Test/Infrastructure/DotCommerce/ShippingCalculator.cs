@@ -5,7 +5,7 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce
 
 	public class ShippingCalculator : IShippingCalculator
 	{
-		public decimal GetShuppingCosts(IOrder order)
+		public decimal GetShippingCosts(IOrder order)
 		{
 			return (decimal)10.00;
 		}

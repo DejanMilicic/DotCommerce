@@ -66,7 +66,7 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 			this.ItemsCount = this.OrderLines.Sum(orderline => orderline.Quantity);
 			this.Weight = this.OrderLines.Sum(orderline => orderline.Weight);
 			this.OrderLinesPrice = this.OrderLines.Sum(orderline => orderline.Price);
-			this.Shipping = shippingCalculator.GetShuppingCosts(Mapper.Map<Order>(this));
+			this.Shipping = shippingCalculator.GetShippingCosts(Mapper.Map<Order>(this));
 			this.Price = this.OrderLinesPrice + this.Shipping;
 			this.LastUpdated = DateTime.UtcNow;
 		}
