@@ -4,8 +4,6 @@ namespace DotCommerce.Persistence.SqlServer.Test
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Runtime.InteropServices.ComTypes;
-
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce;
