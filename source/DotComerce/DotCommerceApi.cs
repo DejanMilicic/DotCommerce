@@ -36,7 +36,8 @@ namespace DotCommerce
 			var query = db.Orders
 				.Include(x => x.OrderLines)
 				.Include(x => x.BillingAddress)
-				.Include(x => x.ShippingAddress);
+				.Include(x => x.ShippingAddress)
+				.Include(x => x.OrderLogs);
 
 			if (orderStatus != null)
 			{
