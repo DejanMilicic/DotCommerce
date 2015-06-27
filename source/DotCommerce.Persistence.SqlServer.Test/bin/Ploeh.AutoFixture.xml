@@ -4285,7 +4285,7 @@
             comparing requests to determine recursion.
             </param>
             <param name="recursionDepth">The recursion depth at which the request will be treated as a recursive
-            request</param>
+            request.</param>
             <exception cref="T:System.ArgumentNullException">
             builder
             or
@@ -4293,6 +4293,7 @@
             or
             comparer
             </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">recursionDepth is less than one.</exception>
         </member>
         <member name="M:Ploeh.AutoFixture.Kernel.RecursionGuard.HandleRecursiveRequest(System.Object)">
             <summary>
@@ -4779,6 +4780,7 @@
             Initializes new instance of the <see cref="T:Ploeh.AutoFixture.OmitOnRecursionBehavior"/> class with specific recursion depth.
             </summary>
             <param name="recursionDepth">The recursion depth at which the request will be omitted.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">recursionDepth is less than one.</exception>
         </member>
         <member name="M:Ploeh.AutoFixture.OmitOnRecursionBehavior.Transform(Ploeh.AutoFixture.Kernel.ISpecimenBuilder)">
             <summary>
