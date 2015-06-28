@@ -284,6 +284,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 		public void GetUserOrdersSummary(string user1, string user2, Product product1, Product product2)
 		{
 			// prepare test data
+			// rewrite this to make mix of all order statuses, not just closed ones
 			int user1TotalOrders = 6;
 			int user2TotalOrders = 9;
 			int totalOrders = user1TotalOrders + user2TotalOrders;

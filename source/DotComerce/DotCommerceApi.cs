@@ -394,7 +394,10 @@ namespace DotCommerce
 			{
 				List<UserOrdersSummary> summaries = new List<UserOrdersSummary>();
 
+				string incompleteStatus = OrderStatus.Incomplete.ToString();
+
 				var groupedQuery = this.GetQueryableOrders(db)
+					.Where(x => x.Status != incompleteStatus)
 					.GroupBy(x => x.UserId)
 					.OrderByDescending(group => group.Count());
 
