@@ -281,6 +281,60 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order.Notes.ShouldBe(notes);
 		}
 
+		public void GetUserOrdersSummary(string user1, string user2, Product product1, Product product2)
+		{
+			// prepare test data
+			int user1TotalOrders = 6;
+			int user2TotalOrders = 9;
+			int totalOrders = user1TotalOrders + user2TotalOrders;
+			int pendingOrders = 3;
+			int readyForDispatchOrders = 2;
+			int closedOrders = totalOrders - pendingOrders - readyForDispatchOrders;
+
+			List<Guid> allOrders = new List<Guid>();
+
+			for (int i = 0; i < user1TotalOrders; i++)
+			{
+				order = dc.GetIncompleteOrder(user1);
+				dc.AddProductToOrder(order, product1);
+				dc.SetStatus(order, OrderStatus.Closed);
+				allOrders.Add(order.Id);
+			}
+
+			for (int i = 0; i < user2TotalOrders; i++)
+			{
+				order = dc.GetIncompleteOrder(user2);
+				dc.AddProductToOrder(order, product2);
+				dc.SetStatus(order, OrderStatus.Closed);
+				allOrders.Add(order.Id);
+			}
+
+			for (int i = 0; i < pendingOrders; i++)
+			{
+				order = dc.Get(allOrders[i]);
+				dc.SetStatus(order, OrderStatus.Pending);
+			}
+
+			for (int i = pendingOrders; i < pendingOrders + readyForDispatchOrders; i++)
+			{
+				order = dc.Get(allOrders[i]);
+				dc.SetStatus(order, OrderStatus.ReadyForDispatch);
+			}
+
+			int totalCount;
+			var orderSummary = dc.GetUserOrdersSummary(0, 100, out totalCount);
+			orderSummary.Count.ShouldBe(2);
+			totalCount.ShouldBe(2);
+
+			UserOrdersSummary first = orderSummary.First();
+			first.UserId.ShouldBe(user2);
+			first.TotalOrdersCount.ShouldBe(user2TotalOrders);
+
+			UserOrdersSummary second = orderSummary.Skip(1).First();
+			second.UserId.ShouldBe(user1);
+			second.TotalOrdersCount.ShouldBe(user1TotalOrders);
+		}
+
 		private bool AreEqual(IOrderAddress orderAddress, Address address)
 		{
 			return orderAddress.Title == address.Title

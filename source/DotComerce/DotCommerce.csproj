@@ -67,6 +67,7 @@
     <Compile Include="Domain\SortingDirection.cs" />
     <Compile Include="Domain\OrderLog.cs" />
     <Compile Include="Domain\SortingField.cs" />
+    <Compile Include="Domain\UserOrdersSummary.cs" />
     <Compile Include="Infrastructure\EntityFramework\Entities\EfOrderLog.cs" />
     <Compile Include="Interfaces\IOrderAddress.cs" />
     <Compile Include="Domain\OrderStatus.cs" />

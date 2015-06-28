@@ -76,5 +76,7 @@ namespace DotCommerce
 		void AssignOrdinal(IOrder order);
 
 		void SetNotes(IOrder order, string notes);
+
+		List<UserOrdersSummary> GetUserOrdersSummary(int pageIndex, int pageSize, out int totalCount);
 	}
 }

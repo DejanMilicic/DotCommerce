@@ -328,6 +328,7 @@ namespace DotCommerce
 			{
 				var query = this.GetQueryableOrders(db, orderStatus, userId);
 				query = query.OrderByDescending(x => x.CreatedOn);
+
 				// get total count before paging is applied
 				totalCount = query.Count();
 
@@ -384,6 +385,34 @@ namespace DotCommerce
 				LogEvent(db, efOrder.Id, LogAction.SetOrdinal, "", ordinal.ToString());
 
 				db.SaveChanges();
+			}
+		}
+
+		public List<UserOrdersSummary> GetUserOrdersSummary(int pageIndex, int pageSize, out int totalCount)
+		{
+			using (Db db = new Db())
+			{
+				List<UserOrdersSummary> summaries = new List<UserOrdersSummary>();
+
+				var groupedQuery = this.GetQueryableOrders(db)
+					.GroupBy(x => x.UserId)
+					.OrderByDescending(group => group.Count());
+
+				// get total count before paging is applied
+				totalCount = groupedQuery.Count();
+
+				summaries.AddRange(
+					groupedQuery
+					.Skip(pageIndex * pageSize).Take(pageSize)
+					.Select(group => new UserOrdersSummary
+					             {
+						             UserId = group.Key,
+									 TotalOrdersCount = group.Count(),
+									 TotalOrdersAmount = group.Sum(g => g.Price)
+					             })
+				);
+
+				return summaries;
 			}
 		}
 	}
