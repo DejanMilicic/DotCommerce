@@ -77,5 +77,24 @@ namespace DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support
 				log[i].Action.ShouldBe(actions[i]);
 			}
 		}
+
+		public static void VerifyLogEntries(this IDotCommerceApi dc, IOrder order, List<TestOrderLog> testLog)
+		{
+			var log = dc.GetLogEntries(order.Id);
+			log.Count.ShouldBe(testLog.Count);
+			for (int i = 0; i < testLog.Count; i++)
+			{
+				VerifyLogEntry(log[i], testLog[i]);
+			}
+		}
+
+		public static void VerifyLogEntry(IOrderLog logEntry, TestOrderLog testLogEntry)
+		{
+			logEntry.OrderId.ShouldBe(testLogEntry.OrderId);
+			logEntry.OrderLineId.ShouldBe(testLogEntry.OrderLineId);
+			logEntry.Action.ShouldBe(testLogEntry.Action);
+			if (testLogEntry.OldValue != null) logEntry.OldValue.ShouldBe(testLogEntry.OldValue);
+			if (testLogEntry.Value != null) logEntry.Value.ShouldBe(testLogEntry.Value);
+		}
 	}
 }

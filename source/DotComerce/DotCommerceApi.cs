@@ -79,10 +79,11 @@ namespace DotCommerce
 			return efOrderLine;
 		}
 
-		private void LogEvent(Db db, Guid orderId, LogAction action, string oldValue, string value)
+		private void LogEvent(Db db, Guid orderId, int orderLineId, LogAction action, string oldValue, string value)
 		{
 			EfOrderLog logEntry = new EfOrderLog();
 			logEntry.OrderId = orderId;
+			logEntry.OrderLineId = orderLineId;
 			logEntry.DateTime = DateTime.Now;
 			logEntry.Action = action.ToString();
 			logEntry.Value = value;
@@ -117,7 +118,7 @@ namespace DotCommerce
 		{
 			EfOrder newOrder = new EfOrder(order.UserId, order.Id);
 			db.Orders.Add(newOrder);
-			LogEvent(db, newOrder.Id, LogAction.CreateOrder, "", "");
+			LogEvent(db, newOrder.Id, 0, LogAction.CreateOrder, "", "");
 			return newOrder;
 		}
 
@@ -140,12 +141,15 @@ namespace DotCommerce
 				}
 				else
 				{
-					efOrder.OrderLines.Add(new EfOrderLine(itemid, name, price, quantity, discount, weight, url, imageUrl));
+					efOrderLine = new EfOrderLine(itemid, name, price, quantity, discount, weight, url, imageUrl);
+                    efOrder.OrderLines.Add(efOrderLine);
 				}
 
 				efOrder.Recalculate(this.shippingCalculator);
 
-				LogEvent(db, efOrder.Id, LogAction.AddItemToOrder, "",
+				db.SaveChanges();
+
+				LogEvent(db, efOrder.Id, efOrderLine.Id, LogAction.AddItemToOrder, "",
 					"itemid:" + itemid + ", quantity: " + quantity + ", price: " + price + ", name: " + name + ", discount: " + discount + ", weight: " + weight + ", url: " + url + ", imageUrl: " + imageUrl);
 
 				db.SaveChanges();
@@ -157,11 +161,7 @@ namespace DotCommerce
 			using (Db db = new Db())
 			{
 				EfOrderLine orderline = GetOrderlineById(db, orderLineId);
-				if (orderline == null)
-				{
-					//return null;
-				}
-				else
+				if (orderline != null)
 				{
 					EfOrder order = GetOrderById(db, orderline.OrderId);
 					if (order.Status == OrderStatus.Incomplete.ToString())
@@ -170,7 +170,7 @@ namespace DotCommerce
 						order.OrderLines.Remove(orderline);
 						order.Recalculate(this.shippingCalculator);
 
-						LogEvent(db, order.Id, LogAction.RemoveOrderLine, "", orderLineId.ToString());
+						LogEvent(db, order.Id, orderLineId, LogAction.RemoveOrderLine, "", "");
 
 						db.SaveChanges();
 					}
@@ -198,7 +198,7 @@ namespace DotCommerce
 						orderline.Quantity = quantity;
 						order.Recalculate(this.shippingCalculator);
 
-						LogEvent(db, order.Id, LogAction.ChangeQuantity, oldQuantity.ToString(), quantity.ToString());
+						LogEvent(db, order.Id, orderLineId, LogAction.ChangeQuantity, oldQuantity.ToString(), quantity.ToString());
 
 						db.SaveChanges();
 					}
@@ -232,7 +232,7 @@ namespace DotCommerce
 				efOrder.ShippingAddress = shippingAddress;
 				efOrder.Recalculate(this.shippingCalculator);
 
-				LogEvent(db, efOrder.Id, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
+				LogEvent(db, efOrder.Id, 0, LogAction.SetShippingAddress, oldShippingAddress, shippingAddress.ToString());
 
 				db.SaveChanges();
 			}
@@ -264,7 +264,7 @@ namespace DotCommerce
 				efOrder.BillingAddress = billingAddress;
 				efOrder.Recalculate(this.shippingCalculator);
 
-				LogEvent(db, efOrder.Id, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
+				LogEvent(db, efOrder.Id, 0, LogAction.SetBillingAddress, oldBillingAddress, billingAddress.ToString());
 
 				db.SaveChanges();
 			}
@@ -279,7 +279,7 @@ namespace DotCommerce
 
 				efOrder.Status = status.ToString();
 
-				LogEvent(db, efOrder.Id, LogAction.SetOrderStatus, existingStatus, status.ToString());
+				LogEvent(db, efOrder.Id, 0, LogAction.SetOrderStatus, existingStatus, status.ToString());
 
 				db.SaveChanges();
 			}
@@ -293,7 +293,7 @@ namespace DotCommerce
 				string existingUser = efOrder.UserId;
 				efOrder.UserId = userId;
 
-				LogEvent(db, efOrder.Id, LogAction.SetUser, existingUser, userId);
+				LogEvent(db, efOrder.Id, 0, LogAction.SetUser, existingUser, userId);
 
 				db.SaveChanges();
 			}
@@ -307,7 +307,7 @@ namespace DotCommerce
 				string existingNotes = efOrder.Notes;
 				efOrder.Notes = notes;
 
-				LogEvent(db, efOrder.Id, LogAction.SetNotes, existingNotes, notes);
+				LogEvent(db, efOrder.Id, 0, LogAction.SetNotes, existingNotes, notes);
 
 				db.SaveChanges();
 			}			
@@ -382,7 +382,7 @@ namespace DotCommerce
 
 				efOrder = this.GetOrderById(db, order.Id);
 				efOrder.Ordinal = ordinal;
-				LogEvent(db, efOrder.Id, LogAction.SetOrdinal, "", ordinal.ToString());
+				LogEvent(db, efOrder.Id, 0, LogAction.SetOrdinal, "", ordinal.ToString());
 
 				db.SaveChanges();
 			}

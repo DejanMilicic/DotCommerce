@@ -6,6 +6,7 @@ namespace DotCommerce.Persistence.SqlServer.Test
 	using System.Linq;
 	using DotCommerce.Domain;
 	using DotCommerce.Interfaces;
+	using DotCommerce.Migrations;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DotCommerce;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.DTO;
 	using DotCommerce.Persistence.SqlServer.Test.Infrastructure.Support;
@@ -62,21 +63,23 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			int secondQuantity = 3;
 			int totalQuantity = product.Quantity + secondQuantity;
 
+			// add product
 			dc.AddProductToOrder(order, product);
-			product.Quantity = secondQuantity;
 
+			// add product again but with new quantity
+			product.Quantity = secondQuantity;
 			dc.AddProductToOrder(order, product);
+
 			order = dc.GetIncompleteOrder(order.UserId);
 
 			order.OrderLines.Count().ShouldBe(1);
 			order.ItemsCount.ShouldBe(totalQuantity);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.AddItemToOrder,
-										   LogAction.AddItemToOrder
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = order.OrderLines.First().Id, Action = LogAction.AddItemToOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = order.OrderLines.First().Id, Action = LogAction.AddItemToOrder },
+			});
 		}
 
 		public void RemoveOrderLine(Product product1, Product product2)
@@ -88,19 +91,19 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			dc.AddProductToOrder(order, product2);
 			order = dc.Get(order.Id);
 			order.OrderLines.Count().ShouldBe(2);
+			int secondOrderLine = order.OrderLines.Skip(1).First().Id;
 
 			dc.RemoveOrderLine(orderLineForRemoval);
 			order = dc.GetIncompleteOrder(order.UserId);
 			order.OrderLines.Count().ShouldBe(1);
 			order.OrderLines.First().ItemId.ShouldBe(product2.Id);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.AddItemToOrder,
-										   LogAction.AddItemToOrder,
-										   LogAction.RemoveOrderLine
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = orderLineForRemoval, Action = LogAction.AddItemToOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = secondOrderLine, Action = LogAction.AddItemToOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = orderLineForRemoval, Action = LogAction.RemoveOrderLine },
+			});
 		}
 
 		public void ChangeQuantity(Product product1)

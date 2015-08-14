@@ -7,6 +7,7 @@ namespace DotCommerce.Interfaces
 	public interface IOrderLog
 	{
 		Guid OrderId { get; }
+		int OrderLineId { get; set; }
 		DateTime DateTime { get; }
 		LogAction Action { get; }
 		string Value { get; }

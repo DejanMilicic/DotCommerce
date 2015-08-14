@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,6 +89,7 @@
     <Compile Include="Infrastructure\Autofixture\DiscountBuilder.cs" />
     <Compile Include="Infrastructure\Autofixture\ProductCustomization.cs" />
     <Compile Include="Infrastructure\DTO\Address.cs" />
+    <Compile Include="Infrastructure\DTO\TestOrderLog.cs" />
     <Compile Include="OrderServiceTests.cs" />
     <Compile Include="Infrastructure\DTO\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

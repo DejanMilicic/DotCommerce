@@ -8,6 +8,7 @@ namespace DotCommerce.Domain
 	{
 		public int Id { get; set; }
 		public Guid OrderId { get; set; }
+		public int OrderLineId { get; set; }
 		public DateTime DateTime { get; set; }
 		public LogAction Action { get; set; }
 		public string Value { get; set; }
