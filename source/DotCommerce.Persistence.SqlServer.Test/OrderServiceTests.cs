@@ -51,11 +51,10 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			orderLine.Weight.ShouldBe(product.Weight * product.Quantity);
 			orderLine.Price.ShouldBe(product.Price * product.Quantity * ((100 - product.Discount) / (100)));
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.AddItemToOrder
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = order.OrderLines.First().Id, Action = LogAction.AddItemToOrder },
+			});
 		}
 
 		public void AddExistingItemToOrder(Product product)
@@ -118,12 +117,11 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetIncompleteOrder(order.UserId);
 			order.ItemsCount.ShouldBe(3);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.AddItemToOrder,
-										   LogAction.ChangeQuantity
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = order.OrderLines.First().Id, Action = LogAction.AddItemToOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = order.OrderLines.First().Id, Action = LogAction.ChangeQuantity, OldValue = "10", Value = "3"},
+			});
 		}
 
 		public void SetShippingAddress(Address shippingAddress)
@@ -133,11 +131,10 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.ShippingAddress, shippingAddress).ShouldBe(true);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.SetShippingAddress
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetShippingAddress },
+			});
 		}
 
 		public void SetBillingAddress(Address billingAddress)
@@ -147,11 +144,10 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetIncompleteOrder(order.UserId);
 			AreEqual(order.BillingAddress, billingAddress).ShouldBe(true);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.SetBillingAddress
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetBillingAddress },
+			});
 		}
 
 		public void SetStatus()
@@ -162,11 +158,10 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.Get(order.Id);
 			order.Status.ShouldBe(OrderStatus.Closed);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.SetOrderStatus
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetOrderStatus, OldValue = OrderStatus.Incomplete.ToString(), Value = OrderStatus.Closed.ToString()},
+			});
 		}
 
 		public void SetUser(string userId)
@@ -176,11 +171,10 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			order = dc.GetIncompleteOrder(userId);
 			order.UserId.ShouldBe(userId);
 
-			dc.VerifyLogEntries(order, new List<LogAction>
-			                           {
-				                           LogAction.CreateOrder,
-										   LogAction.SetUser
-			                           });
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetUser, Value = userId},
+			});
 		}
 
 		public void GetOrders(string user1, string user2, Product product1, Product product2)
@@ -266,13 +260,27 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			order = dc.Get(order.Id);
 			order.Ordinal.ShouldBe(1);
+			var order1id = order.Id;
 
 			IOrder order2 = dc.GetIncompleteOrder(order.UserId);
 			dc.SetStatus(order2, OrderStatus.Closed);
 			dc.AssignOrdinal(order2);
+			var order2id = order2.Id;
 
 			order2 = dc.Get(order2.Id);
 			order2.Ordinal.ShouldBe(2);
+
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetOrderStatus, Value = OrderStatus.Closed.ToString()},
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetOrdinal, Value = "1"},
+			});
+
+			dc.VerifyLogEntries(order2, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order2.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order2.Id, OrderLineId = 0, Action = LogAction.SetOrderStatus, Value = OrderStatus.Closed.ToString()},
+				new TestOrderLog { OrderId = order2.Id, OrderLineId = 0, Action = LogAction.SetOrdinal, Value = "2"},
+			});
 		}
 
 		public void SetNotes(string notes)
@@ -282,6 +290,12 @@ namespace DotCommerce.Persistence.SqlServer.Test
 
 			order = dc.Get(order.Id);
 			order.Notes.ShouldBe(notes);
+
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetOrderStatus, Value = OrderStatus.Closed.ToString()},
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetNotes, Value = notes},
+			});
 		}
 
 		public void GetUserOrdersSummary(string user1, string user2, Product product1, Product product2)
