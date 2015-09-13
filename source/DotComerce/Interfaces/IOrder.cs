@@ -44,6 +44,10 @@ namespace DotCommerce.Interfaces
 		
 		IOrderAddress BillingAddress { get; }
 
+		bool IsShipping { get; }
+
+		DateTime? ShippingDate { get; }
+
 		IEnumerable<IOrderLog> OrderLogs { get; }
 
 		/// <summary>

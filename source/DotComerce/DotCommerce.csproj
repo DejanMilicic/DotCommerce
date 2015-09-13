@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201508141711492_OrderLog_OrderLineId.Designer.cs">
       <DependentUpon>201508141711492_OrderLog_OrderLineId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509132148417_IsShipping_ShippingDate.cs" />
+    <Compile Include="Migrations\201509132148417_IsShipping_ShippingDate.Designer.cs">
+      <DependentUpon>201509132148417_IsShipping_ShippingDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -128,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508141711492_OrderLog_OrderLineId.resx">
       <DependentUpon>201508141711492_OrderLog_OrderLineId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509132148417_IsShipping_ShippingDate.resx">
+      <DependentUpon>201509132148417_IsShipping_ShippingDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

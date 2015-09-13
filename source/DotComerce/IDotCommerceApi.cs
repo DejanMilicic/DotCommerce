@@ -78,5 +78,9 @@ namespace DotCommerce
 		void SetNotes(IOrder order, string notes);
 
 		List<UserOrdersSummary> GetUserOrdersSummary(int pageIndex, int pageSize, out int totalCount);
+
+		void SetShipping(IOrder order, bool isShipping);
+
+		void SetShippingDate(IOrder order, DateTime? shippingDate);
 	}
 }

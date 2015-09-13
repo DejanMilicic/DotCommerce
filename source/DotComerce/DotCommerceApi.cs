@@ -142,7 +142,7 @@ namespace DotCommerce
 				else
 				{
 					efOrderLine = new EfOrderLine(itemid, name, price, quantity, discount, weight, url, imageUrl);
-                    efOrder.OrderLines.Add(efOrderLine);
+					efOrder.OrderLines.Add(efOrderLine);
 				}
 
 				efOrder.Recalculate(this.shippingCalculator);
@@ -408,14 +408,50 @@ namespace DotCommerce
 					groupedQuery
 					.Skip(pageIndex * pageSize).Take(pageSize)
 					.Select(group => new UserOrdersSummary
-					             {
-						             UserId = group.Key,
+								 {
+									 UserId = group.Key,
 									 TotalOrdersCount = group.Count(),
 									 TotalOrdersAmount = group.Sum(g => g.Price)
-					             })
+								 })
 				);
 
 				return summaries;
+			}
+		}
+
+		public void SetShipping(IOrder order, bool isShipping)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder efOrder = GetOrCreateById(db, order);
+
+				bool oldIsShipping = efOrder.IsShipping;
+				efOrder.IsShipping = isShipping;
+
+				efOrder.Recalculate(this.shippingCalculator);
+
+				db.SaveChanges();
+
+				LogEvent(db, efOrder.Id, 0, LogAction.SetShipping, oldIsShipping.ToString(), isShipping.ToString());
+
+				db.SaveChanges();
+			}
+		}
+
+		public void SetShippingDate(IOrder order, DateTime? shippingDate)
+		{
+			using (Db db = new Db())
+			{
+				EfOrder efOrder = GetOrCreateById(db, order);
+
+				DateTime? oldShippingDate = efOrder.ShippingDate;
+				efOrder.ShippingDate = shippingDate;
+
+				db.SaveChanges();
+
+				LogEvent(db, efOrder.Id, 0, LogAction.SetShippingDate, oldShippingDate.ToString(), shippingDate.ToString());
+
+				db.SaveChanges();
 			}
 		}
 	}

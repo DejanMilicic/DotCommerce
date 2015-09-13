@@ -30,6 +30,8 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 			this.OrderLinesPrice = 0;
 			this.Shipping = 0;
 			this.Price = 0;
+			this.IsShipping = true;
+			this.ShippingDate = null;
 		}
 
 		public Guid Id { get; set; }
@@ -47,6 +49,8 @@ namespace DotCommerce.Infrastructure.EntityFramework.Entities
 		public EfAddress ShippingAddress { get; set; }
 		public EfAddress BillingAddress { get; set; }
 		public string Notes { get; set; }
+		public bool IsShipping { get; set; }
+		public DateTime? ShippingDate { get; set; }
 		public List<EfOrderLog> OrderLogs { get; set; }
 
 		public EfOrderLine FindOrderLine(string itemId, decimal itemPrice, decimal itemDiscount, int itemWeight)

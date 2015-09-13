@@ -15,6 +15,8 @@ namespace DotCommerce.Domain
 		public static readonly LogAction SetUser = new LogAction("SetUser", "SetUser");
 		public static readonly LogAction SetOrdinal = new LogAction("SetOrdinal", "SetOrdinal");
 		public static readonly LogAction SetNotes = new LogAction("SetNotes", "SetNotes");
+		public static readonly LogAction SetShipping = new LogAction("SetShipping", "SetShipping");
+		public static readonly LogAction SetShippingDate = new LogAction("SetShippingDate", "SetShippingDate");
 
 		public LogAction(string value, string displayName) : base(value, displayName)
 		{

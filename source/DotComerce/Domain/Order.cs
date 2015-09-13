@@ -36,6 +36,8 @@ namespace DotCommerce.Domain
 		public decimal Price { get; set; }
 		public int? Ordinal { get; set; }
 		public string Notes { get; set; }
+		public bool IsShipping { get; set; }
+		public DateTime? ShippingDate { get; set; }
 
 		public IOrderAddress ShippingAddress { get { return EditableShippingAddress; } }
 		public OrderAddress EditableShippingAddress { get; set; }
