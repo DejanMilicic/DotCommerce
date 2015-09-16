@@ -233,6 +233,90 @@
             <value>The builder originally supplied via the constructor.</value>
             <seealso cref="M:Ploeh.AutoFixture.BehaviorRoot.#ctor(Ploeh.AutoFixture.Kernel.ISpecimenBuilder)"/>
         </member>
+        <member name="T:Ploeh.AutoFixture.InvariantCultureGenerator">
+            <summary>
+            Handles creation requests for <see cref="T:System.Globalization.CultureInfo"/> instances, 
+            returning always the same <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>.
+            </summary>
+        </member>
+        <member name="M:Ploeh.AutoFixture.InvariantCultureGenerator.Create(System.Object,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            Generates a CultureInfo specimen based on a <see cref="T:System.Globalization.CultureInfo"/> type request.
+            </summary>
+            <param name="request">The request that describes what to create.</param>
+            <param name="context">A context that can be used to create other specimens.</param>
+            <returns>
+            The requested specimen if possible; otherwise a <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
+            </returns>
+            <remarks>&gt;
+            The generated CultureInfo will always be the same as <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>.
+            </remarks>
+        </member>
+        <member name="T:Ploeh.AutoFixture.EmailAddressLocalPart">
+            <summary>
+            Represents the local part of the email address, defined as everything up to, but not including, the @ sign.  
+            Since EmailAddressLocalPart is used in constructing MailAddress, enforcement of rules on a valid email address
+            is performed by <see cref="T:System.Net.Mail.MailAddress"/> and not EmailAddressLocalPart other than as noted. 
+            </summary>
+        </member>
+        <member name="M:Ploeh.AutoFixture.EmailAddressLocalPart.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.EmailAddressLocalPart"/> class. Throws ArgumentNullException
+            if localPart is null.  Throws ArgumentException if localPart is empty.
+            </summary>
+            <param name="localPart">The local part.</param>                
+        </member>
+        <member name="M:Ploeh.AutoFixture.EmailAddressLocalPart.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.
+            </param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object"/> is equal to this instance; 
+            otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.NullReferenceException">
+            The <paramref name="obj"/> parameter is null.
+              </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.EmailAddressLocalPart.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data 
+            structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.EmailAddressLocalPart.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the local part for this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the local part for this instance.
+            </returns>
+        </member>
+        <member name="P:Ploeh.AutoFixture.EmailAddressLocalPart.LocalPart">
+            <summary>
+            Get the local part.
+            </summary>
+        </member>
+        <member name="T:Ploeh.AutoFixture.EmailAddressLocalPartGenerator">
+            <summary>
+            Creates new <see cref="T:Ploeh.AutoFixture.EmailAddressLocalPart"/> instances.
+            </summary>
+        </member>
+        <member name="M:Ploeh.AutoFixture.EmailAddressLocalPartGenerator.Create(System.Object,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            Creates a new specimen based on a request.
+            </summary>
+            <param name="request">The request that describes what to create</param>
+            <param name="context">A context that can be used to create other specimens.</param>
+            <returns>
+            The requested specimen if possible; otherwise a <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
+            </returns>
+        </member>
         <member name="T:Ploeh.AutoFixture.Kernel.CompositeSpecimenCommand">
             <summary>
             Aggregates a set of <see cref="T:Ploeh.AutoFixture.Kernel.ISpecimenCommand"/>.
@@ -288,6 +372,96 @@
             Gets the child commands.
             </summary>
         </member>
+        <member name="T:Ploeh.AutoFixture.Kernel.Criterion`1">
+            <summary>
+            Serves as a criterion against which a value can be compared. When a
+            given value equals the criterion, it can be said to match the 
+            criterion; otherwise not.
+            </summary>
+            <typeparam name="T">The type of values being compared.</typeparam>
+            <remarks>
+            <para>
+            Sometimes you need to compare various candidates against a particular
+            value, but the comparison rules may vary. Sometimes, strict equality
+            is warranted, but otherwise (e.g. when comparing strings) looser
+            comparison rules can be applied (e.g. case-insensitve comparison of
+            strings).
+            </para>
+            <para>
+            The Criterion class enables you to capture the desied value (the
+            <see cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Target"/>) together with the appropriate comparison method
+            (the <see cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Comparer"/>) in a single object.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.Criterion`1.#ctor(`0,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.Kernel.Criterion`1"/>
+            class.
+            </summary>
+            <param name="target">
+            The target value against which candidates will be compared. Can be
+            <see langword="null"/>.
+            </param>
+            <param name="comparer">
+            The comparison method used to compare candidates against
+            <paramref name="target"/>.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="comparer"/> is <see langword="null"/>.
+            </exception>
+            <seealso cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Target"/>
+            <seealso cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Comparer"/>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.Criterion`1.Equals(`0)">
+            <summary>
+            Compares a candidate value against this
+            <see cref="T:Ploeh.AutoFixture.Kernel.Criterion`1"/>.
+            </summary>
+            <param name="other">
+            The candidate to compare against this value.
+            </param>
+            <returns>
+            <see langword="true"/> if <paramref name="other"/> is deemed
+            equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method compares the candidate <paramref name="other"/>
+            against <see cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Target"/>, using <see cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Comparer"/> as
+            the comparison method. If this combination of target value and
+            comparison method deems the candidate to be equal to this
+            criterion, the return value is <see langword="true"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.Criterion`1.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to another object.
+            </summary>
+            <param name="obj">The object to compare to this object.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="obj" /> is equal to this
+            object; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.Criterion`1.GetHashCode">
+            <summary>
+            Returns the hash code for the object.
+            </summary>
+            <returns>The hash code.</returns>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.Criterion`1.Target">
+            <summary>
+            The desired target value, as supplied via the constructor.
+            </summary>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.Criterion`1.Comparer">
+            <summary>
+            The comparison method used to compare <see cref="P:Ploeh.AutoFixture.Kernel.Criterion`1.Target"/> to
+            candidates.
+            </summary>
+        </member>
         <member name="T:Ploeh.AutoFixture.Kernel.EnumeratorRelay">
             <summary>
             Relays a request for <see cref="T:System.Collections.Generic.IEnumerator`1"/> to 
@@ -319,6 +493,89 @@
             <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
             </para>
             </remarks>
+        </member>
+        <member name="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion">
+            <summary>
+            Represents a criterion for comparing a candidate field against a
+            desired type and name.
+            </summary>
+            <remarks>
+            <para>
+            Sometimes, you may need to evaluate various candidate
+            <seealso cref="T:System.Reflection.FieldInfo"/> values, looking for one that has a
+            desired field type and name. This class represents such an
+            evaluation criterion.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.Equals(System.Reflection.FieldInfo)"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.Criterion`1"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion"/>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.#ctor(System.IEquatable{System.Type},System.IEquatable{System.String})">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion"/> class with the desired
+            field type and name criteria.
+            </summary>
+            <param name="typeCriterion">
+            The criterion indicating the desired field type.
+            </param>
+            <param name="nameCriterion">
+            The criterion indicating the desired field name.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="typeCriterion"/> or
+            <paramref name="nameCriterion"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.Equals(System.Reflection.FieldInfo)">
+            <summary>
+            Compares a candidate <see cref="T:System.Reflection.FieldInfo"/> object against this
+            <see cref="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion"/>.
+            </summary>
+            <param name="other">
+            The candidate to compare against this object.
+            </param>
+            <returns>
+            <see langword="true"/> if <paramref name="other"/> is deemed
+            equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method compares the candidate <paramref name="other"/>
+            against <see cref="P:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.TypeCriterion"/> and
+            <see cref="P:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.NameCriterion"/>. If the field's type mathes the type
+            criterion, and its name matches the name criterion, the return
+            value is <see langword="true"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to another object.
+            </summary>
+            <param name="obj">The object to compare to this object.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="obj" /> is equal to this
+            object; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.GetHashCode">
+            <summary>
+            Returns the hash code for the object.
+            </summary>
+            <returns>The hash code</returns>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.TypeCriterion">
+            <summary>
+            The type criterion originally passed in via the class' constructor.
+            </summary>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion.NameCriterion">
+            <summary>
+            The name criterion originall passed in via the class' constructor.
+            </summary>
         </member>
         <member name="T:Ploeh.AutoFixture.Kernel.GenericMethod">
             <summary>
@@ -413,6 +670,172 @@
             Gets the owner originally supplied through the constructor.
             </summary>
             <seealso cref="M:Ploeh.AutoFixture.Kernel.MissingParametersSupplyingMethodFactory.#ctor(System.Object)"/>
+        </member>
+        <member name="T:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion">
+            <summary>
+            Represents a criterion for comparing a candidate parameter against a
+            desired type and name.
+            </summary>
+            <remarks>
+            <para>
+            Sometimes, you may need to evaluate various candidate
+            <seealso cref="T:System.Reflection.ParameterInfo"/> values, looking for one that has a
+            desired parameter type and name. This class represents such an
+            evaluation criterion.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.Equals(System.Reflection.ParameterInfo)"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.Criterion`1"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion"/>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.#ctor(System.IEquatable{System.Type},System.IEquatable{System.String})">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion"/> class with the desired
+            field type and name criteria.
+            </summary>
+            <param name="typeCriterion">
+            The criterion indicating the desired field type.
+            </param>
+            <param name="nameCriterion">
+            The criterion indicating the desired field name.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="typeCriterion"/> or
+            <paramref name="nameCriterion"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.Equals(System.Reflection.ParameterInfo)">
+            <summary>
+            Compares a candidate <see cref="T:System.Reflection.ParameterInfo"/> object against
+            this <see cref="T:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion"/>.
+            </summary>
+            <param name="other">
+            The candidate to compare against this object.
+            </param>
+            <returns>
+            <see langword="true"/> if <paramref name="other"/> is deemed
+            equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method compares the candidate <paramref name="other"/>
+            against <see cref="P:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.TypeCriterion"/> and
+            <see cref="P:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.NameCriterion"/>. If the parameter's type mathes the
+            type criterion, and its name matches the name criterion, the return
+            value is <see langword="true"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to another object.
+            </summary>
+            <param name="obj">The object to compare to this object.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="obj" /> is equal to this
+            object; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.GetHashCode">
+            <summary>
+            Returns the hash code for the object.
+            </summary>
+            <returns>The hash code</returns>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.TypeCriterion">
+            <summary>
+            The type criterion originally passed in via the class' constructor.
+            </summary>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion.NameCriterion">
+            <summary>
+            The name criterion originall passed in via the class' constructor.
+            </summary>
+        </member>
+        <member name="T:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion">
+            <summary>
+            Represents a criterion for comparing a candidate property against a
+            desired type and name.
+            </summary>
+            <remarks>
+            <para>
+            Sometimes, you may need to evaluate various candidate
+            <seealso cref="T:System.Reflection.PropertyInfo"/> values, looking for one that has a
+            desired property type and name. This class represents such an
+            evaluation criterion.
+            </para>
+            </remarks>
+            <seealso cref="M:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.Equals(System.Reflection.PropertyInfo)"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.Criterion`1"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.ParameterTypeAndNameCriterion"/>
+            <seealso cref="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion"/>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.#ctor(System.IEquatable{System.Type},System.IEquatable{System.String})">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion"/> class with the desired
+            field type and name criteria.
+            </summary>
+            <param name="typeCriterion">
+            The criterion indicating the desired field type.
+            </param>
+            <param name="nameCriterion">
+            The criterion indicating the desired field name.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="typeCriterion"/> or
+            <paramref name="nameCriterion"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.Equals(System.Reflection.PropertyInfo)">
+            <summary>
+            Compares a candidate <see cref="T:System.Reflection.PropertyInfo"/> object against
+            this <see cref="T:Ploeh.AutoFixture.Kernel.FieldTypeAndNameCriterion"/>.
+            </summary>
+            <param name="other">
+            The candidate to compare against this object.
+            </param>
+            <returns>
+            <see langword="true"/> if <paramref name="other"/> is deemed
+            equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+            <para>
+            This method compares the candidate <paramref name="other"/>
+            against <see cref="P:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.TypeCriterion"/> and
+            <see cref="P:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.NameCriterion"/>. If the property's type mathes the
+            type criterion, and its name matches the name criterion, the return
+            value is <see langword="true"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to another object.
+            </summary>
+            <param name="obj">The object to compare to this object.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="obj" /> is equal to this
+            object; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.GetHashCode">
+            <summary>
+            Returns the hash code for the object.
+            </summary>
+            <returns>The hash code</returns>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.TypeCriterion">
+            <summary>
+            The type criterion originally passed in via the class' constructor.
+            </summary>
+        </member>
+        <member name="P:Ploeh.AutoFixture.Kernel.PropertyTypeAndNameCriterion.NameCriterion">
+            <summary>
+            The name criterion originall passed in via the class' constructor.
+            </summary>
         </member>
         <member name="T:Ploeh.AutoFixture.Kernel.TemplateMethodQuery">
             <summary>
@@ -1012,7 +1435,8 @@
         <member name="T:Ploeh.AutoFixture.Kernel.PropertySpecification">
             <summary>
             A specification that determines whether the request is a request
-            for a <see cref="T:System.Reflection.PropertyInfo"/> matching the specified name and <see cref="T:System.Type"/>.
+            for a <see cref="T:System.Reflection.PropertyInfo"/> matching a particular property,
+            according to the supplied comparison rules.
             </summary>
         </member>
         <member name="M:Ploeh.AutoFixture.Kernel.PropertySpecification.#ctor(System.Type,System.String)">
@@ -1030,6 +1454,19 @@
             <exception cref="T:System.ArgumentNullException">
             <paramref name="targetType"/> or
             <paramref name="targetName"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.PropertySpecification.#ctor(System.IEquatable{System.Reflection.PropertyInfo})">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Ploeh.AutoFixture.Kernel.PropertySpecification"/> class.
+            </summary>
+            <param name="target">
+            The criterion used to match the requested
+            <see cref="T:System.Reflection.PropertyInfo"/> with the specified value.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="target"/> is <see langword="null"/>.
             </exception>
         </member>
         <member name="M:Ploeh.AutoFixture.Kernel.PropertySpecification.IsSatisfiedBy(System.Object)">
@@ -1111,6 +1548,18 @@
             <paramref name="targetName"/> is <see langword="null"/>.
             </exception>
         </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.ParameterSpecification.#ctor(System.IEquatable{System.Reflection.ParameterInfo})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.Kernel.ParameterSpecification"/> class.
+            </summary>
+            <param name="target">
+            The criteria used to match the requested
+            <see cref="T:System.Reflection.ParameterInfo"/>.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="target"/> is <see langword="null"/>.
+            </exception>
+        </member>
         <member name="M:Ploeh.AutoFixture.Kernel.ParameterSpecification.IsSatisfiedBy(System.Object)">
             <summary>
             Evaluates a request for a specimen.
@@ -1154,6 +1603,18 @@
             <exception cref="T:System.ArgumentNullException">
             <paramref name="targetType"/> or
             <paramref name="targetName"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.FieldSpecification.#ctor(System.IEquatable{System.Reflection.FieldInfo})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.Kernel.FieldSpecification"/> class.
+            </summary>
+            <param name="target">
+            The criteria used to match the requested
+            <see cref="T:System.Reflection.FieldInfo"/>.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="target"/> is <see langword="null"/>.
             </exception>
         </member>
         <member name="M:Ploeh.AutoFixture.Kernel.FieldSpecification.IsSatisfiedBy(System.Object)">
@@ -4896,15 +5357,13 @@
             <summary>
             Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.RandomNumericSequenceGenerator"/> class.
             </summary>
-            <param name="limits">A sequence of integers beginning with two positive or negative 
-            number optionally followed by a series of greater numbers.</param>
+            <param name="limits">A sequence of at least two ascending numbers.</param>
         </member>
         <member name="M:Ploeh.AutoFixture.RandomNumericSequenceGenerator.#ctor(System.Int64[])">
             <summary>
             Initializes a new instance of the <see cref="T:Ploeh.AutoFixture.RandomNumericSequenceGenerator"/> class.
             </summary>
-            <param name="limits">An array of integers beginning with two positive or negative 
-            number optionally followed by a series of greater numbers.</param>
+            <param name="limits">An array of at least two ascending numbers.</param>
             <exception cref="T:System.ArgumentNullException"></exception>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
@@ -4918,6 +5377,15 @@
             The next random number in a sequence, if <paramref name="request"/> is a request
             for a numeric value; otherwise, a <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
             </returns>
+        </member>
+        <member name="M:Ploeh.AutoFixture.RandomNumericSequenceGenerator.GetUpperRangeFromLimits">
+            <summary>
+            Returns upper limit + 1 when expecting to use upper as max value in Random.Next(Int32,Int32).
+            This ensures that the upper limit is included in the possible values returned by Random.Next(Int32,Int32)
+            
+            When not expecting to use Random.Next(Int32,Int32).  It returns the original upper limit.
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:Ploeh.AutoFixture.RandomNumericSequenceGenerator.Limits">
             <summary>
