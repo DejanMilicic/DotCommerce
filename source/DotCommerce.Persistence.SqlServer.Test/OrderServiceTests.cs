@@ -298,6 +298,18 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			});
 		}
 
+		public void SetShipping(bool isShipping)
+		{
+			dc.SetShipping(order, isShipping);
+			order = dc.Get(order.Id);
+			order.IsShipping.ShouldBe(isShipping);
+
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetShipping, Value = isShipping.ToString()},
+			});
+		}
+
 		public void GetUserOrdersSummary(string user1, string user2, Product product1, Product product2)
 		{
 			// prepare test data
