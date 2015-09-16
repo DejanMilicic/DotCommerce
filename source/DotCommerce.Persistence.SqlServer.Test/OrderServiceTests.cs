@@ -310,6 +310,24 @@ namespace DotCommerce.Persistence.SqlServer.Test
 			});
 		}
 
+		public void SetShippingDate(DateTime? shippingDate)
+		{
+			dc.SetShippingDate(order, shippingDate);
+			order = dc.Get(order.Id);
+			order.ShippingDate.ToString().ShouldBe(shippingDate.ToString());
+
+			DateTime? shippingDate2 = null;
+			dc.SetShippingDate(order, shippingDate2);
+			order = dc.Get(order.Id);
+			order.ShippingDate.ToString().ShouldBe(shippingDate2.ToString());
+
+			dc.VerifyLogEntries(order, new List<TestOrderLog>{
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.CreateOrder },
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetShippingDate, Value = shippingDate.ToString()},
+				new TestOrderLog { OrderId = order.Id, OrderLineId = 0, Action = LogAction.SetShippingDate, Value = shippingDate2.ToString()},
+			});
+		}
+
 		public void GetUserOrdersSummary(string user1, string user2, Product product1, Product product2)
 		{
 			// prepare test data
